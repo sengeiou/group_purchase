@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.LineSortingOrderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.LineSortingOrder">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="line_sorting_order_id" jdbcType="INTEGER" property="lineSortingOrderId"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="driver_name" jdbcType="VARCHAR" property="driverName"/>
+        <result column="generate_time" jdbcType="TIMESTAMP" property="generateTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        line_sorting_order_id, activity_id, phone, driver_name,
+        generate_time ,goods_image, goods_name ,goods_price ,goods_preferential,
+        line_id ,line_sorting_str,appmodel_id,remark,activity_name,activity_type,send_bill_id,goods_totle_sum
+    </sql>
+
+</mapper>

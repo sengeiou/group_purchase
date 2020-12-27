@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.user.dao.ProviderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.user.model.Provider">
+        <id column="provider_id" jdbcType="VARCHAR" property="providerId"/>
+        <result column="provider_name" jdbcType="VARCHAR" property="providerName"/>
+        <result column="provider_phone" jdbcType="VARCHAR" property="providerPhone"/>
+        <result column="provider_address" jdbcType="VARCHAR" property="providerAddress"/>
+        <result column="provider_area" jdbcType="VARCHAR" property="providerArea"/>
+        <result column="provider_status" jdbcType="INTEGER" property="providerStatus"/>
+        <result column="apply_state" jdbcType="INTEGER" property="applyState"/>
+        <result column="goods_class" jdbcType="VARCHAR" property="goodsClass"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="delete_state" jdbcType="BIT" property="deleteState"/>
+    </resultMap>
+
+    <resultMap id="ProviderManagerVOMap" type="com.mds.group.purchase.user.vo.ProviderManagerVO"
+               extends="BaseResultMap">
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        provider_id,provider_name,provider_phone,provider_address,provider_area,
+        provider_status,goods_class,remark,create_time,appmodel_id,delete_state,apply_state,wxuser_id
+    </sql>
+
+    <delete id="deleteProviderDelete">
+        update t_provider
+        set delete_state = 1
+        where provider_id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectProviderApplySearch" resultMap="ProviderManagerVOMap">
+        select
+        provider_id,provider_name,provider_phone,provider_address,provider_area,
+        provider_status,create_time,apply_state,goods_class
+        from t_provider
+        where
+        appmodel_id = #{appmodelId}
+        and delete_state = 0
+        <if test="providerId != null ">
+            and provider_id like #{providerId}
+        </if>
+        <if test="providerName != null ">
+            and provider_name like #{providerName}
+        </if>
+        <if test="providerPhone != null ">
+            and provider_phone = #{providerPhone}
+        </if>
+        <if test="searchType == 1">
+            and provider_status = 1
+        </if>
+        <if test="searchType == 2">
+            and provider_status = 0
+        </if>
+        <if test="searchType == 3">
+            and apply_state = 0
+        </if>
+        <if test="searchType == 4">
+            and apply_state = 2
+        </if>
+    </select>
+    <select id="getName" resultType="java.lang.String">
+        select provider_name from t_provider where provider_id = #{providerId} and delete_state = false
+    </select>
+    <select id="selectByProviderIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_provider
+        where provider_id in
+        <foreach collection="list" open="(" close=")" item="providerId" separator=",">
+            #{providerId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+
+</mapper>

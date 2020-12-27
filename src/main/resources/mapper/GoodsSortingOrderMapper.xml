@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.GoodsSortingOrderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.GoodsSortingOrder">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="goods_sorting_order_id" jdbcType="INTEGER" property="goodsSortingOrderId"/>
+        <result column="sendb_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_image" jdbcType="VARCHAR" property="goodsImage"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="goods_totle_sum" jdbcType="INTEGER" property="goodsTotleSum"/>
+    </resultMap>
+
+    <resultMap id="GoodsSortingOrderViewVOMap"
+               type="com.mds.group.purchase.order.vo.GoodsSortingOrderViewVO" extends="BaseResultMap">
+
+    </resultMap>
+
+    <select id="selectByGoodsSortingOrder" resultMap="GoodsSortingOrderViewVOMap">
+        select * from t_goods_sorting_order
+        where sendb_bill_id = #{sendBillId} and appmodel_id =#{appmodelId}
+    </select>
+</mapper>

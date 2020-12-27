@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.ProvincesMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.Provinces">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="provinceid" jdbcType="VARCHAR" property="provinceid"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.mds.group.purchase.logistics.result.ProvincesResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="provinceid" jdbcType="VARCHAR" property="value"/>
+        <result column="province" jdbcType="VARCHAR" property="label"/>
+    </resultMap>
+    <resultMap id="ProvincesResultMap" type="com.mds.group.purchase.logistics.result.PCAResult">
+        <result column="provinceid" jdbcType="VARCHAR" property="value"/>
+        <result column="province" jdbcType="VARCHAR" property="label"/>
+        <association property="list" column="provinceid"
+                     select="com.mds.group.purchase.logistics.dao.CitiesMapper.selectCityResultByProvinceId"/>
+    </resultMap>
+    <sql id="Base_Clounm_List">
+        id,provinceid,province
+    </sql>
+    <select id="selectByProvinceid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Clounm_List"/>
+        from
+        t_provinces
+        where
+        provinceid = #{key}
+    </select>
+    <select id="getAll" resultMap="ProvincesResultMap">
+        select * from t_provinces
+    </select>
+    <select id="selectByProvinceids" resultMap="BaseResultMap">
+        select * from t_provinces where
+        provinceid in
+        <foreach collection="provinceIdList" index="index" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectIdLikeName" resultType="java.lang.String">
+        select provinceid from t_provinces where province like concat('%',#{province},'%') limit 1
+    </select>
+
+
+</mapper>

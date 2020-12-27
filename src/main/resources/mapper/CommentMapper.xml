@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.Comment">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="comment_id" jdbcType="BIGINT" property="commentId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="comment_content_goods" jdbcType="VARCHAR" property="commentContentGoods"/>
+        <result column="comment_content_group" jdbcType="VARCHAR" property="commentContentGroup"/>
+        <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="provider_id" jdbcType="VARCHAR" property="providerId"/>
+        <result column="group_leader_icon" jdbcType="VARCHAR" property="groupLeaderIcon"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_number" jdbcType="INTEGER" property="goodsNumber"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="comment_user" jdbcType="VARCHAR" property="commentUser"/>
+        <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime"/>
+        <result column="goods_score" jdbcType="DOUBLE" property="goodsScore"/>
+        <result column="group_score" jdbcType="DOUBLE" property="groupScore"/>
+        <result column="del_flag" jdbcType="BIT" property="delFlag"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+
+
+    <select id="selectGoodsCommentByOrderNo" resultType="java.lang.String">
+        select comment_content_goods from t_comment where order_no = #{orderNo}
+    </select>
+
+    <!--<select id="selectAcgGoodsScoreByGoodsId" resultType="java.lang.Double">-->
+    <!--SELECT AVG(goods_score) FROM t_comment WHERE goods_id = #{goodsId}-->
+    <!--</select>-->
+    <select id="selectGoodsScoreByOrderNo" resultType="java.lang.Double">
+        select goods_score from t_comment where order_no = #{orderNo}
+    </select>
+    <select id="selectAcgGoodsScoreByGoodsIds" resultMap="BaseResultMap">
+        select * from t_comment where goods_id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByCommentUser" resultMap="BaseResultMap">
+        select c.order_no,c.comment_content_goods,c.comment_content_group,c.group_leader_id,c.group_leader_name,c.provider_id,
+        c.group_leader_icon,c.goods_id,od.act_goods_id,c.goods_name,c.goods_img,c.goods_number,c.comment_user,c.comment_time,
+        c.goods_score,c.group_score,c.del_flag,c.appmodel_id
+         from t_comment  as c
+        join t_order as o on c.order_no = o.order_no
+        join t_order_detail as od  on od.order_id = o.order_id
+        where comment_user = #{wxuserId} order by comment_time desc
+    </select>
+</mapper>

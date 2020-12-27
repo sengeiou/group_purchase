@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.ReceiptBillDetailMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.ReceiptBillDetail">
+        <id column="bill_detail_id" jdbcType="BIGINT" property="billDetailId"/>
+        <result column="bill_id" jdbcType="BIGINT" property="billId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="receipt_goods_num" jdbcType="INTEGER" property="receiptGoodsNum"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="order_ids" jdbcType="VARCHAR" property="orderIds"/>
+        <result column="order_detail_ids" jdbcType="VARCHAR" property="orderDetailIds"/>
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="leader_after_sale_num" jdbcType="INTEGER" property="leaderAfterSaleNum"/>
+        <result column="activity_id" jdbcType="DECIMAL" property="activityId"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+    <delete id="deleteByBillIds">
+        DELETE
+        FROM
+        t_receipt_bill_detail
+        WHERE
+        bill_id IN
+        <foreach collection="billIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="selectByBillIds" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        t_receipt_bill_detail
+        WHERE
+        bill_id IN
+        <foreach collection="billIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByOrderDetailId" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        t_receipt_bill_detail
+        WHERE order_detail_ids  LIKE concat('%',#{orderDetailId},'%') LIMIT 1
+    </select>
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        t_receipt_bill_detail
+        WHERE order_ids  LIKE concat('%',#{orderId},'%') LIMIT 1
+    </select>
+
+</mapper>

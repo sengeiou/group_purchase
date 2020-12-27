@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.Order">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="saler_id" jdbcType="BIGINT" property="salerId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="pay_status" jdbcType="INTEGER" property="payStatus"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="pickup_location" jdbcType="VARCHAR" property="pickupLocation"/>
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee"/>
+        <result column="discounts_fee" jdbcType="DECIMAL" property="discountsFee"/>
+        <result column="transportation_fee" jdbcType="INTEGER" property="transportationFee"/>
+        <result column="pay_fee" jdbcType="DECIMAL" property="payFee"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc"/>
+        <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId"/>
+        <result column="pay_channel" jdbcType="INTEGER" property="payChannel"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="pay_time" jdbcType="VARCHAR" property="payTime"/>
+        <result column="form_id" jdbcType="VARCHAR" property="formId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="group_leader_phone" jdbcType="VARCHAR" property="groupLeaderPhone"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="group_leader_icon" jdbcType="VARCHAR" property="groupLeaderIcon"/>
+        <result column="postil" jdbcType="VARCHAR" property="postil"/>
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="user_after_sale_num" jdbcType="INTEGER" property="userAfterSaleNum"/>
+        <result column="confirm_time" jdbcType="VARCHAR" property="confirmTime"/>
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee"/>
+        <result column="close_time" jdbcType="VARCHAR" property="closeTime"/>
+        <result column="discounts_fee" jdbcType="DECIMAL" property="discountsFee"/>
+        <result column="confirm_time" jdbcType="VARCHAR" property="confirmTime"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+
+    <resultMap id="WechatOrderResult" type="com.mds.group.purchase.order.result.WechatOrderResult"
+               extends="BaseResultMap">
+        <result column="user_name" jdbcType="VARCHAR" property="wxuserName"/>
+        <result column="user_icon" jdbcType="VARCHAR" property="wxuserIcon"/>
+        <result column="goods_score" jdbcType="DOUBLE" property="goodsScore"/>
+        <result column="comment_content_goods" jdbcType="VARCHAR" property="goodsComment"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="order_detail_id" jdbcType="BIGINT" property="orderDetailId"/>
+        <result column="order_detail_no" jdbcType="VARCHAR" property="orderDetailNo"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="preferential" jdbcType="DECIMAL" property="preferential"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="record_time" jdbcType="TIMESTAMP" property="recordTime"/>
+        <result column="goods_detail" jdbcType="VARCHAR" property="goodsDetail"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="BIGINT" property="lineName"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="user_after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="after_sale_no" jdbcType="VARCHAR" property="afterSaleNo"/>
+        <result column="after_sale_status" jdbcType="INTEGER" property="afterSaleStatus"/>
+        <result column="after_sale_type" jdbcType="INTEGER" property="afterSaleType"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="user_after_sale_num" jdbcType="INTEGER" property="userAfterSaleNum"/>
+        <result column="forecast_receive_time" jdbcType="VARCHAR" property="forecastReceiveTime"/>
+    </resultMap>
+
+
+    <resultMap id="PcOrderResult" type="com.mds.group.purchase.order.result.PcOrderResult">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="pay_status" jdbcType="INTEGER" property="payStatus"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="pickup_location" jdbcType="VARCHAR" property="pickupLocation"/>
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee"/>
+        <result column="discounts_fee" jdbcType="DECIMAL" property="discountsFee"/>
+        <result column="pay_fee" jdbcType="DECIMAL" property="payFee"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc"/>
+        <result column="pay_channel" jdbcType="INTEGER" property="payChannel"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="pay_time" jdbcType="VARCHAR" property="payTime"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="group_leader_phone" jdbcType="VARCHAR" property="groupLeaderPhone"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="group_leader_icon" jdbcType="VARCHAR" property="groupLeaderIcon"/>
+        <result column="postil" jdbcType="VARCHAR" property="postil"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="wxuser_Name" jdbcType="VARCHAR" property="wxuserName"/>
+        <result column="icon" jdbcType="VARCHAR" property="wxuserIcon"/>
+        <result column="goods_score" jdbcType="DOUBLE" property="goodsScore"/>
+        <result column="group_score" jdbcType="DOUBLE" property="groupScore"/>
+        <result column="comment_content_goods" jdbcType="VARCHAR" property="goodsComment"/>
+        <result column="comment_content_group" jdbcType="VARCHAR" property="groupComment"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="preferential" jdbcType="DECIMAL" property="preferential"/>
+        <result column="activity_price" jdbcType="DECIMAL" property="actGoodsPrice"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="record_time" jdbcType="TIMESTAMP" property="recordTime"/>
+        <result column="goods_detail" jdbcType="VARCHAR" property="goodsDetail"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+        <result column="create_date" jdbcType="VARCHAR" property="sendBillCreateDate"/>
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="user_after_sale_num" jdbcType="INTEGER" property="userAfterSaleNum"/>
+        <result column="status" jdbcType="INTEGER" property="sendBillStatus"/>
+    </resultMap>
+
+    <sql id="PcOrderResult_List">
+        order_id,wxuser_id,order_no,pay_status,buyer_name,buyer_phone,buyer_address,pickup_location,total_fee,discounts_fee,pay_fee,
+        user_desc,shop_desc,pay_channel,create_time,pay_time,group_id,group_leader_phone,group_leader_name,group_leader_icon,postil,
+        appmodel_id,wxuser_Name,icon,goods_score,group_score,comment_content_goods,comment_content_group,goods_name,goods_id,goods_img
+        goods_price,preferential,goods_num,update_time,send_time,record_time,goods_detail,line_name,send_bill_id,send_bill_name
+        create_date,status,after_sale_order_id,after_sale_num
+    </sql>
+
+    <resultMap id="OrderResult" type="com.mds.group.purchase.order.result.OrderResult">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="saler_id" jdbcType="BIGINT" property="salerId"/>
+        <result column="postil" jdbcType="BIGINT" property="postil"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="pay_status" jdbcType="INTEGER" property="payStatus"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="pickup_location" jdbcType="VARCHAR" property="pickupLocation"/>
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee"/>
+        <result column="discounts_fee" jdbcType="DECIMAL" property="discountsFee"/>
+        <result column="transportation_fee" jdbcType="INTEGER" property="transportationFee"/>
+        <result column="pay_fee" jdbcType="DECIMAL" property="payFee"/>
+        <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId"/>
+        <result column="pay_channel" jdbcType="INTEGER" property="payChannel"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="order_detail_id" jdbcType="BIGINT" property="orderDetailId"/>
+        <result column="order_detail_no" jdbcType="VARCHAR" property="orderDetailNo"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="preferential" jdbcType="DECIMAL" property="preferential"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="record_time" jdbcType="TIMESTAMP" property="recordTime"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="group_leader_phone" jdbcType="VARCHAR" property="groupLeaderPhone"/>
+        <result column="group_leader_icon" jdbcType="VARCHAR" property="groupLeaderIcon"/>
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="form_id" jdbcType="VARCHAR" property="formId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="goods_detail" jdbcType="VARCHAR" property="goodsDetail"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="activity_price" jdbcType="BIGINT" property="actGoodsPrice"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="after_sale_no" jdbcType="VARCHAR" property="afterSaleNo"/>
+        <result column="after_sale_status" jdbcType="INTEGER" property="afterSaleStatus"/>
+        <result column="after_sale_type" jdbcType="INTEGER" property="afterSaleType"/>
+        <result column="user_after_sale_num" jdbcType="INTEGER" property="userAfterSaleNum"/>
+        <result column="forecast_receive_time" jdbcType="TIMESTAMP" property="forecastReceiveTime"
+        />
+        <result column="is_solitaire_order" jdbcType="BIT" property="isSolitaireOrder"/>
+        <association property="goodsScore" javaType="double" column="order_no"
+                     select="com.mds.group.purchase.order.dao.CommentMapper.selectGoodsScoreByOrderNo"/>
+        <association column="wxuser_id" javaType="string" property="wxuserName"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectNameByUserId"/>
+        <association column="wxuser_id" javaType="string" property="wxuserIcon"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectIconByUserId"/>
+        <association column="order_no" javaType="string" property="goodsComment"
+                     select="com.mds.group.purchase.order.dao.CommentMapper.selectGoodsCommentByOrderNo"/>
+        <collection property="streetNames" column="line_id" javaType="ArrayList"
+                    select="com.mds.group.purchase.logistics.dao.LineDetailMapper.selectStreetNameByLineId"/>
+    </resultMap>
+
+    <resultMap id="SendBillExcel" type="com.mds.group.purchase.order.result.SendBillExcel">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="saler_id" jdbcType="BIGINT" property="salerId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="pickup_location" jdbcType="VARCHAR" property="pickupLocation"/>
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee"/>
+        <result column="discounts_fee" jdbcType="DECIMAL" property="discountsFee"/>
+        <result column="pay_fee" jdbcType="DECIMAL" property="payFee"/>
+        <result column="pay_channel" jdbcType="INTEGER" property="payChannel"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="preferential" jdbcType="DECIMAL" property="preferential"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="group_leader_phone" jdbcType="VARCHAR" property="groupLeaderPhone"/>
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="driver_name" jdbcType="VARCHAR" property="driverName"/>
+        <result column="driver_phone" jdbcType="VARCHAR" property="driverPhone"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="community_name" jdbcType="VARCHAR" property="communityName"/>
+        <association column="wxuser_id" javaType="string" property="wxuserName"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectNameByUserId"/>
+    </resultMap>
+
+    <resultMap id="GroupResult" type="com.mds.group.purchase.order.result.GroupOrderDTO" extends="BaseResultMap">
+        <collection property="orderDetailList" column="order_id"
+                    ofType="com.mds.group.purchase.order.model.OrderDetail"
+                    select="com.mds.group.purchase.order.dao.OrderDetailMapper.selectOrderDetails"/>
+    </resultMap>
+
+    <resultMap id="HistoricalTransactionDataVOMap" type="com.mds.group.purchase.shop.vo.HistoricalTransactionDataVO">
+        <result column="volume_of_business" jdbcType="DECIMAL" property="volumeOfBusiness"/>
+        <result column="volume_of_business_number" jdbcType="INTEGER" property="volumeOfBusinessNumber"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+    </resultMap>
+
+    <resultMap id="SalesVolumeDataVOMap" type="com.mds.group.purchase.order.vo.SalesVolumeDataVO">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="value" jdbcType="BIGINT" property="value"/>
+    </resultMap>
+
+    <resultMap id="StatisticsVOMap" type="com.mds.group.purchase.shop.vo.StatisticsVO">
+        <result column="payStatu" jdbcType="INTEGER" property="payStatu"/>
+        <result column="payStatusSum" jdbcType="BIGINT" property="payStatusSum"/>
+    </resultMap>
+    <resultMap id="NotSettlementCommissionResultMap"
+               type="com.mds.group.purchase.order.result.NotSettlementCommissionResult">
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_no" jdbcType="BIGINT" property="orderNo"/>
+        <result column="pay_status" jdbcType="INTEGER" property="payStatus"/>
+        <result column="pay_time" jdbcType="VARCHAR" property="payTime"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="goods_num" jdbcType="VARCHAR" property="goodsNum"/>
+
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+        <association column="wxuser_id" javaType="string" property="wxuserName"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectNameByUserId"/>
+        <association column="wxuser_id" javaType="string" property="wxuserIcon"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectIconByUserId"/>
+    </resultMap>
+
+    <resultMap id="ActivityTurnoverDTOMap" type="com.mds.group.purchase.order.result.ActivityTurnoverDTO">
+        <result column="activity_id" jdbcType="INTEGER" property="acitvityId"/>
+        <result column="totle_fee" jdbcType="DOUBLE" property="totleFee"/>
+        <result column="toole_sum" jdbcType="INTEGER" property="totleSum"/>
+        <result column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+    </resultMap>
+    <resultMap id="MembersResultMap" type="com.mds.group.purchase.order.result.MembersResult">
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+        <association column="wxuser_id" javaType="string" property="wxuserName"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectNameByUserId"/>
+        <association column="wxuser_id" javaType="string" property="wxuserIcon"
+                     select="com.mds.group.purchase.user.dao.WxuserMapper.selectIconByUserId"/>
+    </resultMap>
+
+    <sql id="Base_column_List">
+        order_id,wxuser_id,saler_id,postil,order_no ,pay_status,group_id,group_leader_name ,group_leader_phone,group_leader_icon ,buyer_name, buyer_phone, buyer_address,
+        pickup_location, total_fee,
+        discounts_fee,transportation_fee ,pay_fee ,pay_order_id ,pay_channel, create_time, pay_time,close_time,
+        form_id,appmodel_id,user_desc,after_sale_order_id,user_after_sale_num
+    </sql>
+    <sql id="result_list">
+        order_id,wxuser_id,saler_id,postil,order_no ,pay_status ,buyer_name, buyer_phone, buyer_address,pickup_location, total_fee,
+        discounts_fee,transportation_fee ,pay_fee ,pay_order_id ,pay_channel, create_time, pay_time,close_time,appmodel_id
+        order_detail_id,order_detail_no,goods_id,goods_price,goods_name,preferential,
+        goods_img,update_time,send_time,record_time,user_desc,
+        group_id,group_leader_name ,group_leader_phone,group_leader_icon,
+        shop_desc,line_id,activity_id,form_id,line_name,goods_num,goods_detail,
+        forecast_receive_time,after_sale_order_id,user_after_sale_num
+    </sql>
+
+    <update id="updateBatch">
+        update
+        t_order
+        <trim>
+            <if test="updateStatus == 1">
+                set pay_status = 2
+            </if>
+            <if test="updateStatus == 2">
+                set shop_desc = #{shopDesc}
+            </if>
+            <if test="updateStatus == 3">
+                set pay_status = 7
+            </if>
+            <if test="updateStatus == 4">
+                set delete_flag = true
+            </if>
+        </trim>
+        where order_id in
+        <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="updateStatus == 1">
+            and pay_status = 1
+        </if>
+    </update>
+    <update id="deleteOrderByOrderNoWxuserId">
+        update t_order set delete_flag = 1
+        where wxuser_id = #{wxuserId} and order_no = #{orderNo} and pay_status in (5,6)
+    </update>
+
+    <update id="updateOrderStatus">
+        update t_order set
+        <trim>
+            <if test="payStatu != null">
+                pay_status = #{payStatu},
+            </if>
+            <if test="closeTime != null">
+                close_time = #{closeTime}
+            </if>
+        </trim>
+        where order_id in
+        <foreach collection="orderIdList" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectById" resultMap="OrderResult">
+        SELECT * FROM t_order AS o
+        LEFT JOIN t_order_detail AS od ON od.`order_id`=o.`order_id`
+        left join t_activity_goods as actg on od.act_goods_id = actg.activity_goods_id
+        WHERE o.delete_flag =0 and o.order_id =#{orderId}
+    </select>
+    <select id="selectGroupOrder" resultMap="GroupResult">
+        SELECT
+        <include refid="Base_column_List"/>
+        FROM t_order
+        where appmodel_id = #{appmodelId} and delete_flag =0
+        and group_id = #{groupLeaderId}
+        <if test="searchType == 1">
+            and pay_status in(3,4)
+        </if>
+        <if test="searchType == 0">
+            and pay_status in(1,2)
+        </if>
+        order by create_time desc
+    </select>
+    <select id="selectAllOrder" resultMap="OrderResult">
+        select * from t_order where appmodel_id = #{appmodelId} and delete_flag =0
+    </select>
+    <select id="selectOrderByCreateTime" resultMap="OrderResult">
+      select * from t_order where create_time and delete_flag =0
+    </select>
+
+    <select id="selectByConditionsV2" resultMap="WechatOrderResult">
+        SELECT o.*,
+        wxuser.wxuser_name as user_name, wxuser.icon as user_icon,
+        cmt.goods_score as goods_score,cmt.comment_content_goods,
+        od.order_detail_id,od.order_detail_no,od.record_time,od.send_time,
+        od.line_id,od.activity_id,od.preferential,od.goods_name,
+        od.goods_num,od.goods_price,od.goods_id, od.goods_img,
+        act.forecast_receive_time,od.act_goods_id,
+        line.line_name
+        FROM t_order AS o
+        LEFT JOIN t_after_sale_order AS aso ON aso.`order_id` = o.`order_id`
+        LEFT JOIN t_order_detail AS od ON od.`order_id`=o.`order_id`
+        left join t_activity as act on od.activity_id = act.activity_id
+        left join t_wxuser as wxuser on wxuser.wxuser_id = o.wxuser_id
+        left join t_comment as cmt on cmt.order_no = o.order_no
+        left join t_line as line on line.line_id = od.line_id
+        WHERE o.delete_flag = 0
+        AND (o.`order_type` in (1,2,4) or aso.after_sale_type in (3,4,5) )
+        <trim>
+            <if test="wxuserId != null">
+                and o.`wxuser_id`=#{wxuserId}
+            </if>
+            <if test="lineId != null">
+                and od.`line_id`=#{lineId}
+            </if>
+            <if test="streetId != null">
+                and od.street_id=#{streetId}
+            </if>
+            <if test="activityId != null">
+                and od.`activity_id`=#{activityId}
+            </if>
+            <if test="startTime!=null and endTime!=null">
+                <choose>
+                    <when test="orderStatus ==0 || orderStatus ==4 || orderStatus ==-1 ||orderStatus==5 ||orderStatus==3">
+                        <![CDATA[ and o.create_time > #{startTime} and o.create_time <= #{endTime} ]]>
+                    </when>
+                    <when test="orderStatus ==1">
+                        <![CDATA[and o.pay_time > #{startTime} and o.pay_time <= #{endTime} ]]>
+                    </when>
+                    <when test="orderStatus ==2">
+                        <![CDATA[and od.record_time > #{startTime} and od.record_time <= #{endTime} ]]>
+                    </when>
+                </choose>
+            </if>
+            <if test="orderStatus != -1">
+                <if test="orderStatus ==5">
+                    and o.pay_status in (5,6,7,9,10)
+                    and o.order_type != 11
+                </if>
+                <if test="orderStatus ==99 or orderStatus ==4 ">
+                    and o.order_type != 11
+                </if>
+                <if test="orderStatus !=4 and orderStatus != 5  and orderStatus !=99   ">
+                    and o.pay_status = #{orderStatus}
+                </if>
+            </if>
+        </trim>
+        <!--<if test="orderStatus != -1">-->
+        <!--order by o.create_time desc-->
+        <!--</if>-->
+    </select>
+
+    <select id="selectByConditions" resultMap="WechatOrderResult">
+        SELECT o.*,
+        wxuser.wxuser_name as user_name, wxuser.icon as user_icon,
+        cmt.goods_score as goods_score,cmt.comment_content_goods,
+        od.order_detail_id,od.order_detail_no,od.record_time,od.send_time,
+        od.line_id,od.activity_id,od.preferential,od.goods_name,
+        od.goods_num,od.goods_price,od.goods_id, od.goods_img,
+        act.forecast_receive_time,od.act_goods_id,od.preferential,
+        line.line_name
+        FROM t_order AS o
+        LEFT JOIN t_order_detail AS od ON od.`order_id`=o.`order_id`
+        left join t_activity as act on od.activity_id = act.activity_id
+        left join t_wxuser as wxuser on wxuser.wxuser_id = o.wxuser_id
+        left join t_comment as cmt on cmt.order_no = o.order_no
+        left join t_line as line on line.line_id = od.line_id
+        WHERE o.delete_flag = 0
+        <trim>
+            <if test="wxuserId != null">
+                and o.`wxuser_id`=#{wxuserId}
+            </if>
+
+            <if test="lineId != null">
+                and od.`line_id`=#{lineId}
+            </if>
+            <if test="streetId != null">
+                and od.street_id=#{streetId}
+            </if>
+            <if test="activityId != null">
+                and od.`activity_id`=#{activityId}
+            </if>
+            <if test="startTime!=null and endTime!=null">
+                <choose>
+                    <when test="orderStatus ==0 || orderStatus ==4 || orderStatus ==-1 ||orderStatus==5">
+                        <![CDATA[ and o.create_time > #{startTime} and o.create_time <= #{endTime} ]]>
+                    </when>
+                    <when test="orderStatus ==1">
+                        <![CDATA[and o.pay_time > #{startTime} and o.pay_time <= #{endTime} ]]>
+                    </when>
+                    <when test="orderStatus ==2">
+                        <![CDATA[and od.record_time > #{startTime} and od.record_time <= #{endTime} ]]>
+                    </when>
+                    <when test="orderStatus ==3">
+                        <![CDATA[and od.create_time > #{startTime} and o.create_time <= #{endTime} ]]>
+                    </when>
+                </choose>
+            </if>
+            <if test="orderStatus != -1">
+                <if test="orderStatus == 1 or orderStatus ==2">
+                    and o.pay_status in (1,2) order by o.pay_status desc, od.send_time desc
+                </if>
+                <if test="orderStatus ==5 or orderStatus == 6">
+                    and o.pay_status in (5,6) order by o.create_time desc
+                </if>
+                <if test="orderStatus ==4">
+                    and o.pay_status in (3,4) order by o.pay_status ,od.record_time desc
+                </if>
+                <if test="orderStatus == 3">
+                    and o.pay_status = #{orderStatus} order by od.record_time desc
+                </if>
+                <if test="orderStatus == 0">
+                    and o.pay_status = #{orderStatus} order by o.create_time desc
+                </if>
+            </if>
+            <if test="orderStatus == -1">
+                order by o.create_time desc
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="selectUserOrderList" resultMap="WechatOrderResult">
+        SELECT o.*,
+        wxuser.wxuser_name as user_name, wxuser.icon as user_icon,
+        cmt.goods_score as goods_score,cmt.comment_content_goods,
+        od.order_detail_id,od.order_detail_no,od.record_time,od.send_time,
+        od.line_id,od.activity_id,od.preferential,od.goods_name,
+        od.goods_num,od.goods_price,od.goods_id, od.goods_img,od.goods_detail,
+        act.forecast_receive_time,od.act_goods_id,od.preferential,
+        line.line_name
+        FROM t_order AS o
+        LEFT JOIN t_order_detail AS od ON od.`order_id`=o.`order_id`
+        left join t_activity as act on od.activity_id = act.activity_id
+        left join t_wxuser as wxuser on wxuser.wxuser_id = o.wxuser_id
+        left join t_comment as cmt on cmt.order_no = o.order_no
+        left join t_line as line on line.line_id = od.line_id
+        WHERE o.delete_flag = 0
+        <if test="wxuserId != null">
+            and o.`wxuser_id`=#{wxuserId}
+        </if>
+        <if test="orderStatus == 1 or orderStatus ==2">
+            and o.pay_status in (1,2) order by od.send_time desc
+        </if>
+        <if test="orderStatus ==5 or orderStatus == 6">
+            and o.pay_status in (5,6) order by cmt.comment_time desc
+        </if>
+        <if test=" orderStatus ==3 and orderStatus ==4">
+            and o.pay_status = #{orderStatus} order by od.record_time desc
+        </if>
+        <if test="orderStatus == -1">
+            order by o.create_time desc
+        </if>
+    </select>
+
+    <select id="selectByOrderPayOk" resultMap="WechatOrderResult">
+        select DISTINCT
+        o.*,
+        od.order_detail_id,od.order_type,od.act_goods_id,od.goods_id,od.goods_price,od.goods_detail,od.group_leader_commission,
+        od.preferential,od.goods_name,od.goods_img,od.update_time,od.activity_id,od.send_time,od.record_time,od.line_id,
+        od.street_id,od.goods_num,l.line_name
+        from t_order as o
+        left join t_order_detail as od on od.order_id = o.order_id
+        left join t_line as l on l.line_id = od.line_id
+        where  o.delete_flag = 0
+        and pay_status in(1,2,3,4)
+       and od.activity_id = #{activityId}
+    </select>
+
+    <select id="searchByConditions" resultMap="WechatOrderResult">
+        select DISTINCT
+        o.*,
+        wu.wxuser_name as user_name, wu.icon as user_icon,
+        od.order_detail_id,od.order_type,od.act_goods_id,od.goods_id,od.goods_price,od.goods_detail,od.group_leader_commission,
+        od.preferential,od.goods_name,od.goods_img,od.update_time,od.activity_id,od.send_time,od.record_time,od.line_id,
+        od.street_id,od.goods_num,l.line_name,
+        cmt.goods_score as goods_score,cmt.comment_content_goods
+        from t_order as o
+        left join t_order_detail as od on od.order_id = o.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as cmt on cmt.order_no = o.order_no
+        left join t_wxuser as wu on wu.wxuser_id = o.wxuser_id
+        where o.appmodel_id = #{appmodelId} and o.delete_flag = 0
+        <trim>
+            <if test="searchOrderVo.activityId != null">
+                and od.activity_id = #{searchOrderVo.activityId}
+            </if>
+            <if test="searchOrderVo.orderStatus != -1">
+                <if test="searchOrderVo.orderStatus >= 0 and 3 > searchOrderVo.orderStatus  ">
+                    and o.pay_status = #{searchOrderVo.orderStatus}
+                </if>
+                <if test="searchOrderVo.orderStatus == 3">
+                    and o.pay_status in(3,4)
+                </if>
+                <if test="searchOrderVo.orderStatus == 4 ">
+                    and o.pay_status = #{searchOrderVo.orderStatus}
+                </if>
+                <if test="searchOrderVo.orderStatus > 4  ">
+                    and o.pay_status in(5,6,7,9,10)
+                </if>
+            </if>
+            <if test="searchOrderVo.goodsName != null">
+                and od.goods_name like concat('%',#{searchOrderVo.goodsName},'%')
+            </if>
+            <if test="searchOrderVo.wxuserName != null">
+                and wu.wxuser_name like concat('%',#{searchOrderVo.wxuserName},'%')
+            </if>
+            <if test="searchOrderVo.buyerName != null">
+                and o.buyer_name like concat('%',#{searchOrderVo.buyerName},'%')
+            </if>
+            <if test="searchOrderVo.lineName != null">
+                and l.`line_name` like concat('%',#{searchOrderVo.lineName},'%')
+            </if>
+            <if test="searchOrderVo.orderNo != null">
+                and o.order_no = #{searchOrderVo.orderNo}
+            </if>
+            <if test="searchOrderVo.pickupLocation != null">
+                and o.pickup_location like concat('%',#{searchOrderVo.pickupLocation},'%')
+            </if>
+            <if test="searchOrderVo.createOrderTimeStart != null">
+                and o.create_time > #{searchOrderVo.createOrderTimeStart}
+            </if>
+            <if test="searchOrderVo.wxuserId != null">
+                and o.wxuser_id = #{searchOrderVo.wxuserId}
+            </if>
+            <if test="searchOrderVo.createOrderTimeEnd != null">
+                <![CDATA[and o.create_time < #{searchOrderVo.createOrderTimeEnd} ]]>
+            </if>
+        </trim>
+        ORDER BY pay_time DESC
+    </select>
+    <!--<select id="selectByOrderNo" resultMap="OrderResult">-->
+    <!--select * from t_order as o-->
+    <!--join t_wxuser as wu on o.wxuser_id = o.wxuser_id-->
+    <!--join t_order_detail as od on o.order_id = o.order_id-->
+    <!--join t_line as l on l.line_id = od.line_id-->
+    <!--where o.order_no = #{orderNo} and o.delete_flag =0-->
+    <!--</select>-->
+
+    <select id="selectAweekVolumeOfBusinessData" resultMap="HistoricalTransactionDataVOMap">
+        SELECT
+        SUM(pay_fee) AS volume_of_business,
+        COUNT(order_id) AS volume_of_business_number,
+        date(pay_time) as pay_time
+        FROM
+        t_order
+        WHERE
+        appmodel_id = #{appmodelId}
+        AND pay_time >= #{lastWeek}
+        AND
+        <![CDATA[
+          pay_time <= #{currentDate}
+        ]]>
+        GROUP BY
+        date(pay_time)
+        ORDER by date(pay_time) desc
+    </select>
+
+    <select id="selectByAppmodelIdStatistics" resultMap="StatisticsVOMap">
+        select pay_status as payStatu, count(pay_status) as payStatusSum  from t_order
+        WHERE
+        appmodel_id = #{appmodelId}
+         and pay_status in (0,1,2,3,4)
+        group by pay_status
+        order by pay_status asc
+    </select>
+
+    <select id="selectByBackSaleStatistics" resultMap="SalesVolumeDataVOMap">
+        <include refid="BackSaleStatisticsSql"/>
+    </select>
+    <select id="selectByBackSaleStatisticsTotle" resultType="java.math.BigDecimal">
+        <include refid="BackSaleStatisticsSql"/>
+    </select>
+
+
+    <select id="selectExportOrder" resultMap="WechatOrderResult">
+        select DISTINCT
+        o.*,
+        wu.wxuser_name as user_name, wu.icon as user_icon,
+        od.order_detail_id,od.order_type,od.act_goods_id,od.goods_id,od.goods_price,od.goods_detail,od.group_leader_commission,
+        od.preferential,od.goods_name,od.goods_img,od.update_time,od.activity_id,od.send_time,od.record_time,od.line_id,
+        od.street_id,od.goods_num,l.line_name,
+        cmt.goods_score as goods_score,cmt.comment_content_goods
+        from t_order as o
+        left join t_order_detail as od on od.order_id = o.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as cmt on cmt.order_no = o.order_no
+        left join t_wxuser as wu on wu.wxuser_id = o.wxuser_id
+        where o.order_id in
+        <foreach collection="orderIdList" item="orderId" open="(" close=")" separator=",">
+            #{orderId}
+        </foreach>
+
+    </select>
+    <select id="selectActivityTurnover" resultMap="ActivityTurnoverDTOMap">
+        select od.activity_id,sum(o.pay_fee) as totle_fee,COUNT(o.order_id) as toole_sum,od.wxuser_id
+        from t_activity act
+        left join t_order_detail od on od.activity_id = act.activity_id
+        left join t_order o on o.order_id = od.order_id
+        where act.appmodel_id = #{appmodelId}
+        and od.appmodel_id = act.appmodel_id
+        and od.activity_id in
+        <foreach collection="activityIdList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        and o.pay_status in(1,2,3,4)
+        group by od.activity_id,od.wxuser_id
+    </select>
+    <select id="selectByIdList" resultMap="OrderResult">
+        select * from t_order as o
+        left join t_order_detail as od on o.order_id = od.order_id
+        left join t_after_sale_order as aso on aso.after_sale_order_id = o.after_sale_order_id
+        where o.order_id in
+        <foreach collection="orderIdList" index="index" open="(" close=")" separator="," item="orderId">
+            #{orderId}
+        </foreach>
+    </select>
+    <select id="selectByorderIds" resultMap="SendBillExcel">
+        select * from t_order as o
+        left join t_wxuser as wu on o.wxuser_id = wu.wxuser_id
+        left join t_order_detail as od on od.order_id = o.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_community as c on c.community_id = wu.community_id
+        where o.delete_flag =0 and
+        o.order_id in
+        <foreach collection="orderIds" index="index" open="(" close=")" separator="," item="orderId">
+            #{orderId}
+        </foreach>
+    </select>
+
+
+    <select id="selectByDateAndStatus" resultMap="PcOrderResult">
+        select
+        o.order_id,o.wxuser_id,o.order_no,o.order_type,o.pay_status,o.buyer_name,o.buyer_phone,o.buyer_address,o.pickup_location,o.total_fee,
+        o.discounts_fee,o.pay_fee,
+        o.user_desc,o.shop_desc,o.pay_channel,o.create_time,o.pay_time,
+        o.group_id,o.group_leader_phone,o.group_leader_name,o.group_leader_icon,o.postil,o.appmodel_id,
+        w.wxuser_Name,w.icon,
+        c.goods_score, c.group_score, c.comment_content_goods,c.comment_content_group,
+        od.goods_name, od.goods_id, od.goods_img, od.goods_price,
+        od.preferential,od.goods_num,od.update_time,od.send_time,od.record_time,
+        o.after_sale_order_id,o.user_after_sale_num,
+        l.line_name,
+        sb.send_bill_id,sb.send_bill_name,sb.create_date,sb.status,ag.activity_price
+        from t_order as o
+        left join t_order_detail as od on o.order_id = od.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as c on c.order_no = o.order_no
+        left join t_wxuser as w on w.wxuser_id =o.wxuser_id
+        left join t_order_send_bill_mapping as om on om.order_id = o.order_id
+        left join t_send_bill as sb on sb.send_bill_id = om.send_bill_id
+        left join t_activity_goods as ag on ag.activity_goods_id = od.act_goods_id
+        where o.delete_flag = 0 and o.appmodel_id = #{appmodelId}
+        <if test="searchOrderVo.goodsName != null ">
+            and od.goods_name like concat('%',#{searchOrderVo.goodsName},'%')
+        </if>
+        <if test="searchOrderVo.wxuserName != null">
+            and w.wxuser_name like concat('%',#{searchOrderVo.wxuserName},'%')
+        </if>
+        <if test="searchOrderVo.buyerName != null">
+            and o.buyer_name like concat('%',#{searchOrderVo.buyerName},'%')
+        </if>
+        <if test="searchOrderVo.orderNo != null">
+            and o.order_no = #{searchOrderVo.orderNo}
+        </if>
+        <if test="searchOrderVo.orderId != null">
+            and o.order_id = #{searchOrderVo.orderId}
+        </if>
+        <if test="searchOrderVo.pickupLocation != null">
+            and o.pickup_location like concat('%',#{searchOrderVo.pickupLocation},'%')
+        </if>
+        <if test="searchOrderVo.groupName != null">
+            and o.group_leader_name like concat('%',#{searchOrderVo.groupName},'%')
+        </if>
+        <if test="searchOrderVo.lineId!= 0">
+            and od.line_id = #{searchOrderVo.lineId}
+        </if>
+        <if test="searchOrderVo.orderStatus != null and searchOrderVo.orderStatus != -1">
+            <if test="searchOrderVo.orderStatus ==3">
+                AND o.pay_status = 4 AND c.del_flag =0
+            </if>
+            <if test="searchOrderVo.orderStatus ==4">
+                AND (o.pay_status = 4 or o.pay_status = 3)
+            </if>
+            <if test="searchOrderVo.orderStatus ==5">
+                and o.pay_status in (5,6,7,9,10)
+            </if>
+            <if test="searchOrderVo.orderStatus !=3 and searchOrderVo.orderStatus !=4 and searchOrderVo.orderStatus !=5 and searchOrderVo.orderStatus !=99">
+                and o.pay_status = #{searchOrderVo.orderStatus}
+            </if>
+
+        </if>
+        <if test="startDate!=null and  endDate != null">
+            <![CDATA[ and o.create_time > #{startDate} and o.create_time <= #{endDate} ]]>
+        </if>
+        <if test="searchOrderVo.sendBillId != 0">
+            <if test="searchOrderVo.sendBillId == -1">
+                and om.generate = 0 and om.del_flag = 0
+            </if>
+            <if test="searchOrderVo.sendBillId != -1">
+                and om.send_bill_id = #{searchOrderVo.sendBillId} and om.del_flag = 0 and om.generate = 1
+            </if>
+        </if>
+    </select>
+    <select id="selectWaitPayOrderByIds" resultMap="BaseResultMap">
+        select * from t_order where pay_status=0 and delete_flag = 0 and order_id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectCloseOrder" resultMap="BaseResultMap">
+
+        select * from t_order where pay_status in (5,6) and appmodel_id = #{appmodelId}
+    </select>
+    <select id="selectByOrderNos" resultMap="OrderResult">
+        select * from t_order_detail as od
+        join t_order as o on o.order_id = od.order_id
+        where o.order_no in
+        <foreach collection="orderNos" index="i" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByIdListPc" resultMap="PcOrderResult">
+        select
+        o.order_id,o.wxuser_id,o.order_no,o.pay_status,o.buyer_name,o.buyer_phone,o.buyer_address,o.pickup_location,o.total_fee,
+        o.discounts_fee,o.pay_fee,
+        o.user_desc,o.shop_desc,o.pay_channel,o.create_time,o.pay_time,
+        o.group_id,o.group_leader_phone,o.group_leader_name,o.group_leader_icon,o.postil,o.appmodel_id,
+        w.wxuser_Name,w.icon,
+        c.goods_score, c.group_score, c.comment_content_goods,c.comment_content_group,
+        od.goods_name, od.goods_id, od.goods_img, od.goods_price,
+        od.preferential,od.goods_num,od.update_time,od.send_time,od.record_time,
+        l.line_name,
+        sb.send_bill_id,sb.send_bill_name,sb.create_date,sb.status,ag.activity_price
+        from t_order as o
+        left join t_order_detail as od on o.order_id = od.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as c on c.order_no = o.order_no
+        left join t_wxuser as w on w.wxuser_id =o.wxuser_id
+        left join t_order_send_bill_mapping as om on om.order_id = o.order_id
+        left join t_send_bill as sb on sb.send_bill_id = om.send_bill_id
+        left join t_activity_goods as ag on ag.activity_goods_id = od.act_goods_id
+        where o.delete_flag = 0 and o.order_id in
+        <foreach collection="orderIds" index="index" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectOrderByAfterSaleOrderId" resultMap="BaseResultMap">
+        select * from t_order where  delete_flag = 0 and after_sale_order_id = #{afterSaleOrderId}
+    </select>
+    <select id="selectWorkbenchSummary" resultMap="BaseResultMap">
+        select * from
+        t_order
+        where
+        delete_flag = 0
+        and group_id = #{groupLeaderId}
+        and pay_status not in (0,5,6,7)
+        and order_type != 11
+        <if test="startDate!=null and  endDate != null">
+            <![CDATA[ and create_time > #{startDate} and create_time <= #{endDate} ]]>
+        </if>
+    </select>
+    <select id="selectWaitReceiptByOrderIds" resultMap="BaseResultMap">
+        SELECT
+        o.*
+        FROM
+        t_order AS o
+        LEFT JOIN t_after_sale_order AS a ON o.after_sale_order_id = a.after_sale_order_id
+        WHERE
+        (o.after_sale_order_id is null or (a.after_sale_status = 1 OR a.after_sale_status = 2 OR a.after_sale_status
+        = 7 OR a.after_sale_status = 99 ) )
+        AND o.pay_status = 2
+        AND o.order_id IN
+        <foreach collection="orderIds" index="i" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByWxuserIdAndStatus" resultMap="OrderResult">
+        select * from t_order as o
+        left join t_order_detail as od on o.order_id = od.order_id
+        where o.wxuser_id = #{wxuserId}
+        and o.group_id = #{groupLeaderId}
+        and o.pay_status=#{status}
+    </select>
+    <select id="selectByGroupLeaderIdAndStatus" resultMap="BaseResultMap">
+         select o.* from t_order as o where o.group_id = #{groupLeaderId} and o.pay_status=#{type}
+    </select>
+    <select id="selectGroupLeaderNotSettlementOrder" resultMap="NotSettlementCommissionResultMap">
+        select * from t_order as o
+        left join t_order_detail as od on o.order_id = od.order_id
+        where o.group_id = #{groupLeaderId} and o.pay_status in (1,2,3,8,9)
+    </select>
+
+    <select id="searchPcOrderResultByOrderIds" resultMap="PcOrderResult">
+        select
+        o.order_id,o.wxuser_id,o.order_no,o.pay_status,o.buyer_name,o.buyer_phone,o.buyer_address,o.pickup_location,o.total_fee,
+        o.discounts_fee,o.pay_fee,
+        o.user_desc,o.shop_desc,o.pay_channel,o.create_time,o.pay_time,
+        o.group_id,o.group_leader_phone,o.group_leader_name,o.group_leader_icon,o.postil,o.appmodel_id,
+        w.wxuser_Name,w.icon,
+        c.goods_score, c.group_score, c.comment_content_goods,c.comment_content_group,
+        od.goods_name, od.goods_id, od.goods_img, od.goods_price,
+        od.preferential,od.goods_num,od.update_time,od.send_time,od.record_time,
+        o.after_sale_order_id,o.user_after_sale_num,
+        l.line_name,
+        sb.send_bill_id,sb.send_bill_name,sb.create_date,sb.status,ag.activity_price
+        from t_order as o
+        left join t_after_sale_order as aso on aso.after_sale_order_id = o.after_sale_order_id
+        left join t_order_detail as od on o.order_id = od.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as c on c.order_no = o.order_no
+        left join t_wxuser as w on w.wxuser_id =o.wxuser_id
+        left join t_order_send_bill_mapping as om on om.order_id = o.order_id
+        left join t_send_bill as sb on sb.send_bill_id = om.send_bill_id
+        left join t_activity_goods as ag on ag.activity_goods_id = od.act_goods_id
+        where o.delete_flag = 0 and o.appmodel_id = #{appmodelId}
+        and o.order_id in
+        <foreach collection="orderIds" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectMembersByIds" resultMap="MembersResultMap">
+        select
+        wxuser_id,buyer_name,buyer_phone,buyer_address
+        from t_order
+        where order_id in
+        <foreach collection="orderIds" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findByWaitPay" resultMap="BaseResultMap">
+      select * from t_order where pay_status= 0 and pay_order_id is not null;
+    </select>
+    <select id="checkSendByAfterSaleOrder" resultType="java.lang.Long">
+        SELECT
+        o.order_id
+        FROM
+        t_order AS o
+        LEFT JOIN t_after_sale_order AS a ON o.after_sale_order_id = a.after_sale_order_id
+        WHERE
+        (a.after_sale_status = 1 or a.after_sale_status = 7)
+        AND a.after_sale_type = 3
+        AND o.order_id IN
+        <foreach collection="orderIds" index="i" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <!--统计团长销售量,商品销售量,会员消费统计-->
+    <sql id="BackSaleStatisticsSql">
+        <if test="optionType == 1">
+            SELECT
+            <if test="condition == 1">
+                group_leader_name AS name,
+            </if>
+            count(group_id) AS value
+            FROM
+            t_order
+            WHERE
+            appmodel_id = #{appmodelId}
+            AND pay_status in (1,2,3,4)
+            <if test="condition == 1">
+                GROUP BY group_id
+                ORDER BY value desc
+                limit 5
+            </if>
+        </if>
+        <if test="optionType == 2">
+            SELECT
+            <if test="condition == 1">
+                od.goods_name as name,
+            </if>
+            SUM(ord.pay_fee) as value
+            FROM
+            t_order ord
+            left JOIN t_order_detail od on od.order_id = ord.order_id
+            WHERE
+            ord.appmodel_id = #{appmodelId}
+            AND ord.pay_status in (1,2,3,4)
+            <if test="condition == 1">
+                group by od.goods_id
+                order by value desc
+                limit 5
+            </if>
+        </if>
+        <if test="optionType == 3">
+            SELECT
+            <if test="condition == 1">
+                u.wxuser_name as name,
+            </if>
+            SUM(ord.pay_fee) as value
+            FROM
+            t_order ord
+            left JOIN t_wxuser u on u.wxuser_id = ord.wxuser_id
+            WHERE
+            ord.appmodel_id = #{appmodelId}
+            AND ord.pay_status in (1,2,3,4)
+            <if test="condition == 1">
+                GROUP BY ord.wxuser_id
+                order by value desc
+                limit 5
+            </if>
+        </if>
+    </sql>
+
+
+</mapper>

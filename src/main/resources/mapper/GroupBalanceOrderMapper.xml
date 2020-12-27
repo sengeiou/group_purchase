@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.user.dao.GroupBpavawiceOrderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.user.model.GroupBpavawiceOrder">
+        <id column="group_bpavawice_order_id" jdbcType="BIGINT" property="groupBpavawiceOrderId"/>
+        <result column="out_bpavawice" jdbcType="DECIMAL" property="outBpavawice"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="out_type" jdbcType="INTEGER" property="outType"/>
+        <result column="form_id" jdbcType="VARCHAR" property="formId"/>
+        <result column="applyfor_state" jdbcType="INTEGER" property="applyforState"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <resultMap id="FinanceManagerVOMap" type="com.mds.group.purchase.user.vo.FinanceManagerVO" extends="BaseResultMap">
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        group_bpavawice_order_id,out_bpavawice,create_time,group_leader_id,appmodel_id,out_type,form_id,applyfor_state,update_time,remark
+    </sql>
+    <select id="selectWithdrawMoneyDetails" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_bpavawice_order
+        where
+        group_leader_id = #{groupLeaderId}
+        and appmodel_id = #{appmodelId}
+        <if test="searchType == 1 ">
+            and applyfor_state = 1
+        </if>
+    </select>
+
+    <select id="selectFinanceManager" resultMap="FinanceManagerVOMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_bpavawice_order
+        where
+        appmodel_id = #{appmodelId}
+        and applyfor_state = #{searchType}
+        <if test="groupName != null">
+            and group_leader_id in(
+            select group_leader_id from t_group_leader
+            where
+            appmodel_id = #{appmodelId}
+            and
+            group_name like #{groupName}
+            )
+        </if>
+        <if test="groupBpavawiceOrderId != null">
+            and group_bpavawice_order_id = #{groupBpavawiceOrderId}
+        </if>
+        <if test="startCreateTime != null">
+            and create_time > #{startCreateTime}
+        </if>
+        <if test="endCreateTime != null">
+            and <![CDATA[ create_time < #{endCreateTime} ]]>
+        </if>
+        <if test="startUpdateTime != null">
+            and update_time > #{startUpdateTime}
+        </if>
+        <if test="endUpdateTime != null">
+            and <![CDATA[ update_time < #{endUpdateTime} ]]>
+        </if>
+    </select>
+    <select id="selectByGroupLeaderId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_bpavawice_order
+        where
+        group_leader_id = #{groupLeaderId}
+        and applyfor_state = 0
+    </select>
+    <select id="countCumulativeCashWithdrawal" resultType="java.math.BigDecimal">
+        SELECT
+            sum( out_bpavawice )
+        FROM
+            t_group_bpavawice_order
+        WHERE
+            group_leader_id = #{groupLeaderId}
+            AND applyfor_state = 1
+
+    </select>
+</mapper>

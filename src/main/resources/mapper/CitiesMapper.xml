@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.CitiesMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.Cities">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cityid" jdbcType="VARCHAR" property="cityid"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="provinceid" jdbcType="VARCHAR" property="provinceid"/>
+    </resultMap>
+    <resultMap id="CityResultMap" type="com.mds.group.purchase.logistics.result.CityResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cityid" jdbcType="VARCHAR" property="value"/>
+        <result column="city" jdbcType="VARCHAR" property="label"/>
+        <!--<association column="cityid" property="areaResults" select="com.mds.group.purchase.logistics.dao.AreasMapper.selectAreasByCityId"/>-->
+    </resultMap>
+    <resultMap id="ResultMap" type="com.mds.group.purchase.logistics.result.CityResultF">
+        <result column="cityid" jdbcType="VARCHAR" property="value"/>
+        <result column="city" jdbcType="VARCHAR" property="label"/>
+        <association column="cityid" property="list"
+                     select="com.mds.group.purchase.logistics.dao.AreasMapper.selectAreaResultFByCityId"/>
+    </resultMap>
+    <sql id="result">
+      id,cityid,city,provinceid
+    </sql>
+    <select id="selectCityResultByProvinceId" resultMap="ResultMap">
+        select
+        <include refid="result"/>
+        from t_cities where provinceid = #{provinceId}
+    </select>
+    <select id="selectCitiesByProvinceId" resultMap="CityResultMap">
+        select
+        <include refid="result"/>
+        from t_cities where provinceid = #{provinceId}
+    </select>
+    <select id="selectByCityId" resultMap="BaseResultMap">
+        select
+        <include refid="result"/>
+        from t_cities where cityid = #{cityid}
+    </select>
+    <select id="selectByCityIdList" resultMap="BaseResultMap">
+        select * from t_cities where cityid in
+        <foreach collection="cityIdList" open="(" close=")" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectIdLikeName" resultType="java.lang.String">
+        select cityid from t_cities where provinceid = #{provinceId} and city like concat('%',#{cityName},'%') limit 1
+    </select>
+</mapper>

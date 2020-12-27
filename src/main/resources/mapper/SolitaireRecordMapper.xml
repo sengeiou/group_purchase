@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.solitaire.dao.SolitaireRecordMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.solitaire.model.SolitaireRecord">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="record_detail" jdbcType="LONGVARCHAR" property="recordDetail"/>
+        <result column="buyer_id" jdbcType="BIGINT" property="buyerId"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_icon" jdbcType="VARCHAR" property="buyerIcon"/>
+        <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId"/>
+        <result column="group_address" jdbcType="VARCHAR" property="groupAddress"/>
+        <result column="total_price" jdbcType="DECIMAL" property="totalPrice"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+</mapper>

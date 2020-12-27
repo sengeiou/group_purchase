@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.LineMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.Line">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="driver_name" jdbcType="VARCHAR" property="driverName"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="city_id" jdbcType="VARCHAR" property="cityId"/>
+        <result column="province_id" jdbcType="VARCHAR" property="provinceId"/>
+        <result column="driver_phone" jdbcType="VARCHAR" property="driverPhone"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+
+    <resultMap id="LineResultMap" type="com.mds.group.purchase.logistics.result.LineResult">
+        <id column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="driver_name" jdbcType="VARCHAR" property="driverName"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="city_id" jdbcType="VARCHAR" property="cityId"/>
+        <result column="province_id" jdbcType="VARCHAR" property="provinceId"/>
+        <result column="driver_phone" jdbcType="VARCHAR" property="driverPhone"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <collection property="lineDetailResults"
+                    column="line_id" select="com.mds.group.purchase.logistics.dao.LineDetailMapper.selectByLineId"/>
+    </resultMap>
+
+    <resultMap id="CommunityLineInfoDTOmap" type="com.mds.group.purchase.logistics.dto.CommunityLineInfoDTO">
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="line_detail_id" jdbcType="BIGINT" property="lineDetailid"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    line_id,line_name,driver_name,driver_phone,appmodel_id,area_id,city_id,province_id
+  </sql>
+
+    <delete id="deleteByLineIds">
+        update t_line set del_flag = 1 where del_flag =0 and line_id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectByVo" resultMap="BaseResultMap">
+        select
+        l.*
+        from t_line as l
+        WHERE l.appmodel_id = #{appmodelId}
+        and l.del_flag = 0
+        and l.line_id IN
+        ( SELECT ld.`line_id` FROM t_line_detail AS `ld` WHERE l.line_id = ld.line_id and ld.del_flag =0
+        <if test="lineGetVo.communityName != null">
+            and ld.community_name like concat('%',#{lineGetVo.communityName},'%')
+        </if>
+        )
+        <trim>
+            <if test="lineGetVo.driverName != null">
+                and l.driver_name like concat('%',#{lineGetVo.driverName},'%')
+            </if>
+            <if test="lineGetVo.driverPhone != null">
+                and l.driver_phone = #{lineGetVo.driverPhone}
+            </if>
+            <if test="lineGetVo.lineId != null">
+                and l.line_id = #{lineGetVo.lineId}
+            </if>
+        </trim>
+
+    </select>
+
+    <select id="selectByV12Vo" resultMap="BaseResultMap">
+        select
+        l.*
+        from t_line as l
+        WHERE l.appmodel_id = #{appmodelId}
+        and l.del_flag = 0
+        <if test="lineGetVo.communityName != null">
+            and l.line_id IN
+            ( SELECT ld.`line_id` FROM t_line_detail AS `ld` WHERE l.line_id = ld.line_id and ld.del_flag =0
+            and ld.community_name like concat('%',#{lineGetVo.communityName},'%')
+            )
+        </if>
+        <trim>
+            <if test="lineGetVo.driverName != null">
+                and l.driver_name like concat('%',#{lineGetVo.driverName},'%')
+            </if>
+            <if test="lineGetVo.driverPhone != null">
+                and l.driver_phone = #{lineGetVo.driverPhone}
+            </if>
+            <if test="lineGetVo.lineId != null">
+                and l.line_id = #{lineGetVo.lineId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectByAppmodelId" resultMap="BaseResultMap">
+        select * from t_line where appmodel_id = #{appmodelId} and del_flag =0
+    </select>
+    <select id="selectByCommunityLine" resultMap="CommunityLineInfoDTOmap">
+        select
+        line.line_name,
+        line.line_id,
+        detail.community_id,
+        detail.line_detail_id
+        from t_line line
+        left join t_line_detail detail on detail.line_id = line.line_id
+        where detail.del_flag = 0 and line.del_flag = 0 and detail.community_id in
+        <foreach collection="communityIds" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectByAreaId" resultMap="BaseResultMap">
+        select * from t_line where appmodel_id = #{appmodelId} and area_id = #{areaid} and del_flag = 0
+    </select>
+
+</mapper>

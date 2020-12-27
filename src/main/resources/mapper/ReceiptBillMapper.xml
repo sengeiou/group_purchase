@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.ReceiptBillMapper">
+
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.ReceiptBill">
+        <id column="bill_id" jdbcType="BIGINT" property="billId"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId"/>
+        <result column="group_leader_phone" jdbcType="VARCHAR" property="groupLeaderPhone"/>
+        <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName"/>
+        <result column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="line_name" jdbcType="VARCHAR" property="lineName"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="community_name" jdbcType="VARCHAR" property="communityName"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="driver_name" jdbcType="VARCHAR" property="driverName"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+
+    <resultMap id="ReceiptBillResultMap" type="com.mds.group.purchase.order.result.ReceiptBillResult"
+               extends="BaseResultMap">
+    </resultMap>
+    <update id="updateStatus">
+        update  t_receipt_bill
+        set status=#{status}
+        where appmodel_id = #{appmodelId}
+        and bill_id = #{billId}
+    </update>
+    <update id="updateStatusBySendBillId">
+        update  t_receipt_bill
+        set status=#{status}
+        where appmodel_id = #{appmodelId}
+        and send_bill_id = #{sendBillId}
+    </update>
+
+    <select id="selectByReceiptBill" resultMap="ReceiptBillResultMap">
+        select * from t_receipt_bill
+        where appmodel_id = #{appmodelId}
+        and send_bill_id = #{sendBillId}
+        <if test="lineId != 0">
+            and line_id = #{lineId}
+        </if>
+    </select>
+    <select id="selectByGroupLeaderId" resultMap="ReceiptBillResultMap">
+        SELECT
+        *
+        FROM
+        t_receipt_bill
+        WHERE
+        group_leader_id = #{groupLeaderId}
+        <if test="type == 0">
+            and (status=2 or status=3 )
+        </if>
+        <if test="type == 1">
+            and (status=3 or status=4)
+        </if>
+        <if test="startDate!=null and endDate!=null">
+            <![CDATA[ and create_time > #{startDate} and create_time <= #{endDate} ]]>
+        </if>
+        ORDER BY
+        create_time DESC
+    </select>
+
+
+</mapper>

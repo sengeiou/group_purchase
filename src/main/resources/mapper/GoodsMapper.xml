@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.goods.dao.GoodsMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.goods.model.Goods">
+        <id column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_title" jdbcType="VARCHAR" property="goodsTitle"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_del_flag" jdbcType="BIT" property="goodsDelFlag"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="market_price" jdbcType="DECIMAL" property="marketPrice"/>
+        <result column="goods_status" jdbcType="INTEGER" property="goodsStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="goods_del_flag" jdbcType="TINYINT" property="goodsDelFlag"/>
+        <result column="goods_img" jdbcType="LONGVARCHAR" property="goodsImg"/>
+        <result column="goods_video_url" jdbcType="VARCHAR" property="goodsVideoUrl"/>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.mds.group.purchase.goods.result.GoodsResult" extends="BaseResultMap">
+        <!--<association property="goodsDetail" column="goods_id" javaType="com.mds.group.purchase.goods.model.GoodsDetail"-->
+        <!--select="com.mds.group.purchase.goods.dao.GoodsDetailMapper.selectByGoodsId"/>-->
+    </resultMap>
+
+    <sql id="base_res">
+        goods_id,goods_title,goods_name,goods_del_flag,price,goods_status,create_time,appmodel_id,goods_img,goods_video_url
+    </sql>
+
+    <insert id="insertGoods" keyProperty="goodsId" parameterType="com.mds.group.purchase.goods.model.Goods"
+            useGeneratedKeys="true">
+        insert into t_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">
+                goods_id,
+            </if>
+            <if test="goodsTitle != null">
+                goods_title,
+            </if>
+            <if test="goodsName != null">
+                goods_name,
+            </if>
+            <if test="goodsDelFlag != null">
+                goods_del_flag,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="marketPrice != null">
+                market_price,
+            </if>
+            <if test="goodsStatus != null">
+                goods_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="appmodelId != null">
+                appmodel_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsTitle != null">
+                #{goodsTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsName != null">
+                #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsDelFlag != null">
+                #{goodsDelFlag,jdbcType=BIT},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="marketPrice != null">
+                #{marketPrice,jdbcType=INTEGER},
+            </if>
+            <if test="goodsStatus != null">
+                #{goodsStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="appmodelId != null">
+                #{appmodelId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSelective">
+        update t_goods
+        <set>
+            <trim suffixOverrides=",">
+                <if test="goodsTitle != null">
+                    goods_title = #{goodsTitle},
+                </if>
+                <if test="goodsName != null">
+                    goods_name=#{goodsName},
+                </if>
+                <if test="goodsDelFlag != null">
+                    goods_del_flag =#{goodsDelFlag},
+                </if>
+                <if test="price != null">
+                    price = #{price},
+                </if>
+                <if test="marketPrice != null">
+                    market_price = #{marketPrice},
+                </if>
+                <if test="goodsStatus != null">
+                    goods_status = #{goodsStatus},
+                </if>
+                <if test="goodsImg != null">
+                    goods_img = #{goodsImg},
+                </if>
+                <if test="goodsVideoUrl != null">
+                    goods_video_url = #{goodsVideoUrl},
+                </if>
+            </trim>
+        </set>
+        where appmodel_id = #{appmodelId} and goods_id = #{goodsId}
+    </update>
+
+    <update id="updateProviderGoods" parameterType="map">
+        update t_goods goods
+        left join t_goods_detail gdetail on gdetail.goods_id = goods.goods_id
+        set
+        <if test="optionType == 2">
+            goods.goods_status = 1
+            where
+            gdetail.provider_id = #{providerId,jdbcType=VARCHAR}
+        </if>
+        <if test="optionType == 1">
+            goods.goods_del_flag = 1
+            where
+            gdetail.provider_id in
+            <foreach collection="providerIds" open="(" close=")" separator="," item="providerId">
+                #{providerId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        and goods.goods_del_flag = 0
+    </update>
+    <update id="updateGoodsStatusBatch">
+        update t_goods set goods_status = 1 where goods_id in
+        <foreach collection="goodsIdList" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </update>
+    <update id="deleteBatch">
+        update t_goods set goods_del_flag = true where goods_id in
+        <foreach collection="goodsIdList" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="isExists" resultType="java.lang.Integer">
+    select count(1) from t_goods where goods_id =#{goodsId} and appmodel_id=#{appmodelId} limit 1
+  </select>
+    <select id="selectInPutInGoods" resultMap="ResultMap">
+        SELECT
+        <include refid="base_res"/>
+        FROM
+        t_goods
+        WHERE
+        goods_status = 0 AND appmodel_id = #{appmodelId}
+        AND goods_del_flag = 0 AND goods_id IN (
+        SELECT DISTINCT
+        mapping.goods_id
+        FROM
+        t_goods_area_mapping mapping
+        left join t_goods_detail detail on detail.goods_id = mapping.goods_id
+        WHERE
+        mapping.appmodel_id = #{appmodelId}
+        and detail.stock > 0
+        )
+    </select>
+    <select id="selectGoods" resultMap="ResultMap">
+        select
+        g.goods_id,g.goods_title,g.goods_name,g.goods_del_flag,g.price,g.goods_status,g.create_time,g.appmodel_id,g.goods_img
+        from t_goods as g
+        <trim>
+            <if test="getGoodsVo.goodsClassId !=null">
+                join t_goods_class_mapping as gcm on g.goods_id = gcm.goods_id
+            </if>
+            <if test="getGoodsVo.providerId !=null">
+                join t_goods_detail as gd on g.goods_id = gd.goods_id
+            </if>
+            where g.appmodel_id = #{appmodelId} and goods_del_flag = 0
+            <if test="getGoodsVo.goodsName != null">
+                and g.goods_name like concat('%',#{getGoodsVo.goodsName},'%')
+            </if>
+            <if test="getGoodsVo.goodsStatus!=null">
+                and g.goods_status = #{getGoodsVo.goodsStatus}
+            </if>
+            <if test="getGoodsVo.goodsClassId!=null">
+                and gcm.goods_class_id in
+                <foreach collection="goodsClassIds" index="i" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="getGoodsVo.providerId !=null">
+                and gd.provider_id = #{getGoodsVo.providerId}
+            </if>
+        </trim>
+        group by g.create_time desc
+        <if test="getGoodsVo.pageStart !=null and getGoodsVo.pageEnd != null">
+            limit #{getGoodsVo.pageStart},#{getGoodsVo.pageEnd}
+        </if>
+    </select>
+
+    <select id="selectCountGoods" resultType="java.lang.Integer">
+        select count(1)
+        from t_goods as g
+        <trim>
+            <if test="getGoodsVo.goodsClassId !=null">
+                join t_goods_class_mapping as gcm on g.goods_id = gcm.goods_id
+            </if>
+            <if test="getGoodsVo.providerId !=null">
+                join t_goods_detail as gd on g.goods_id = gd.goods_id
+            </if>
+            where g.appmodel_id = #{appmodelId} and goods_del_flag = 0
+            <if test="getGoodsVo.goodsName != null">
+                and g.goods_name like concat('%',#{getGoodsVo.goodsName},'%')
+            </if>
+            <if test="getGoodsVo.goodsStatus!=null">
+                and g.goods_status = #{getGoodsVo.goodsStatus}
+            </if>
+            <if test="getGoodsVo.goodsClassId!=null">
+                and gcm.goods_class_id in
+                <foreach collection="goodsClassIds" index="i" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="getGoodsVo.providerId !=null">
+                and gd.provider_id = #{getGoodsVo.providerId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectLikeName" resultMap="ResultMap">
+        select
+        <include refid="base_res"/>
+        from t_goods where appmodel_id =#{appmodelId} and goods_name like #{goodsName}
+    </select>
+    <select id="selectByStatusLikeName" resultMap="ResultMap">
+        select
+        <include refid="base_res"/>
+        from t_goods where appmodel_id =#{appmodelId} and goods_status=#{goodsStatus} and goods_name like #{goodsName}
+    </select>
+    <select id="selectByGoodsIds" resultMap="BaseResultMap">
+        select
+        <include refid="base_res"/>
+        from t_goods where goods_status = 0 and goods_del_flag = 0 and goods_id in (#{goodsIds})
+    </select>
+    <select id="selectAllGoods" resultMap="ResultMap">
+        select
+        <include refid="base_res"/>
+        from t_goods where appmodel_id =#{appmodelId} and goods_del_flag = 0
+    </select>
+
+    <select id="selectByProviderPutawayOfgoods" resultType="java.lang.String">
+        SELECT
+        DISTINCT goodsd.provider_id
+        FROM t_goods goods
+        inner JOIN t_goods_detail goodsd on goodsd.goods_id = goods.goods_id
+        WHERE
+        goods.appmodel_id = #{appmodelId}
+        and
+        goods.goods_status = 0
+        and
+        goods.goods_del_flag = 0
+        and
+        goodsd.provider_id in
+        <foreach collection="providerIds" separator="," open="(" close=")" item="providerId">
+            #{providerId}
+        </foreach>
+
+    </select>
+    <select id="selectByNoMappinGoods" resultMap="BaseResultMap">
+      SELECT
+         DISTINCT  goods_id, goods_name, price, goods_img
+      FROM  t_goods
+      WHERE
+      appmodel_id = #{appmodelId}
+      AND goods_del_flag = 0
+      AND goods_status = 0
+      AND goods_id NOT IN (
+            SELECT DISTINCT
+                goods_id
+            FROM
+                t_goods_area_mapping
+            WHERE
+                appmodel_id = #{appmodelId}
+        )
+    </select>
+    <select id="selectByIdListNotDel" resultMap="BaseResultMap">
+        select * from t_goods
+        where goods_del_flag = 0
+        and goods_id in
+        <foreach collection="goodsIds" open="(" close=")" separator="," item="i" index="in">
+            #{i}
+        </foreach>
+    </select>
+    <select id="selectByIdListOnSaleNotDel" resultMap="BaseResultMap">
+        select * from t_goods
+        where goods_del_flag = 0
+        and goods_status = 0
+        and goods_id in
+        <foreach collection="goodsIdList" open="(" close=")" separator="," item="i" index="in">
+            #{i}
+        </foreach>
+    </select>
+
+
+</mapper>

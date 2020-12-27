@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.activity.dao.ActivityGoodsMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.activity.model.ActivityGoods">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="activity_goods_id" jdbcType="BIGINT" property="activityGoodsId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="activity_type" jdbcType="INTEGER" property="activityType"/>
+        <result column="activity_discount" jdbcType="DOUBLE" property="activityDiscount"/>
+        <result column="activity_price" jdbcType="DECIMAL" property="activityPrice"/>
+        <result column="activity_stock" jdbcType="INTEGER" property="activityStock"/>
+        <result column="activity_sales_volume" jdbcType="INTEGER" property="activitySalesVolume"/>
+        <result column="max_quantity" jdbcType="INTEGER" property="maxQuantity"/>
+        <result column="index_display" jdbcType="BIT" property="indexDisplay"/>
+        <result column="join_solitaire" jdbcType="BIT" property="joinSolitaire"/>
+        <result column="sort_position" jdbcType="INTEGER" property="sortPosition"/>
+        <result column="preheat_status" jdbcType="INTEGER" property="preheatStatus"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+        <result column="sold_out_flag" jdbcType="INTEGER" property="soldOutFlag"/>
+    </resultMap>
+    <update id="reduceStockAndaddVolume">
+      update t_activity_goods
+        set activity_stock = activity_stock - #{goodsNum},activity_sales_volume = #{goodsNum}
+      where activity_goods_id =#{activityGoodsId}
+    </update>
+    <update id="updatePreheatByActId">
+        update t_activity_goods
+        set preheat_status = #{activityGoodsPreheat}
+        where activity_id = #{activityId}
+    </update>
+    <update id="soldOutActGoods">
+        update t_activity_goods set sold_out_flag = #{soldOutFlag} where activity_goods_id in
+        <foreach collection="actGoodsIds" index="index" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateJoinSolitaireByIds">
+        update t_activity_goods set join_solitaire = #{isJoinSolitaire} where activity_goods_id in (#{isJoinSolitaire})
+    </update>
+    <select id="selectExistsNoStartActivity" resultMap="BaseResultMap">
+        SELECT
+        actGoods.*
+        FROM
+        t_activity_goods actGoods
+        LEFT JOIN t_activity act ON act.activity_id = actGoods.activity_id
+        WHERE
+        act.`status` in (0,1,2)
+        AND act.delete_status = 0
+        AND actGoods.del_flag = 0
+        and actGoods.appmodel_id = #{appmodelId}
+        and actGoods.goods_id in
+        <foreach collection="goodsIdList" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <delete id="deleteByActivityId">
+      update t_activity_goods set del_flag = 1 where activity_id = #{activityId}
+    </delete>
+    <delete id="deleteBatch">
+        update t_activity_goods set del_flag =1 where activity_goods_id in
+        <foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="delById">
+        update t_activity_goods set del_flag = 1 where activity_goods_id = 1
+    </delete>
+    <select id="selectIndexActGoodsByActIds" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and index_display = 1 and activity_id in
+        <foreach item="item" index="index" collection="actIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByGoodsIdPreheatStart" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and activity_type = #{activityType} and preheat_status != 0
+        and
+        goods_id in
+        <foreach collection="goodsId" open="(" close=")" separator="," index="index" item="item">
+            #{item}
+        </foreach>
+    </select>
+    <select id="countByActId" resultType="java.lang.Integer">
+        select count(1) from t_activity_goods where del_flag = 0 and  activity_id=#{activityId}
+    </select>
+    <select id="selectActGoodsByActIds" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and activity_id in
+        <foreach item="item" index="index" collection="actIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="selectActGoodsByActId" resultMap="BaseResultMap">
+         select * from t_activity_goods where del_flag = 0 and  activity_id = #{actId}
+    </select>
+    <select id="selectActGoodsByGoodsId" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and goods_id = #{goodsId}
+    </select>
+    <select id="selectByActGoodsId" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and activity_goods_id = #{actGoodsId}
+    </select>
+    <select id="selectByActGoodsIds" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and activity_goods_id in
+        <foreach item="item" index="index" collection="actGoodsIds" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByGoodsIds" resultMap="BaseResultMap">
+        select * from t_activity_goods where del_flag = 0 and goods_id in
+        <foreach collection="goodsIdList" open="(" close=")" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

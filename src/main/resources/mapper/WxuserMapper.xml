@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.user.dao.WxuserMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.user.model.Wxuser">
+        <id column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+        <result column="wxuser_name" jdbcType="VARCHAR" property="wxuserName"/>
+        <result column="wxuser_desc" jdbcType="VARCHAR" property="wxuserDesc"/>
+        <result column="mini_open_id" jdbcType="VARCHAR" property="miniOpenId"/>
+        <result column="pc_open_id" jdbcType="VARCHAR" property="pcOpenId"/>
+        <result column="mp_openid" jdbcType="VARCHAR" property="mpOpenid"/>
+        <result column="union_id" jdbcType="VARCHAR" property="unionId"/>
+        <result column="mds_union_id" jdbcType="VARCHAR" property="mdsUnionId"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
+        <result column="delete_statu" jdbcType="INTEGER" property="deleteStatu"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+    <resultMap id="WxuserManagerVOMap" type="com.mds.group.purchase.user.vo.WxuserManagerVO" extends="BaseResultMap">
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        wxuser_id,wxuser_name,wxuser_desc,phone,union_id,mds_union_id,remark,session_key,icon,create_time,community_id,user_status,appmodel_id,pc_open_id,mini_open_id,delete_statu,mp_openid
+    </sql>
+    <update id="updateByComminuty">
+        update t_wxuser set  community_id = 0
+        where  appmodel_id = #{appmodelId}
+        and community_id = #{communityId}
+    </update>
+    <update id="updateMpOpenIdByPrimaryKey">
+        update t_wxuser set mp_openid = #{mpOpenId} where wxuser_id = #{wxuserId}
+    </update>
+    <update id="unbind">
+        update t_wxuser set mp_openid = null , mds_union_id = null where wxuser_id = #{wxuserId}
+    </update>
+
+    <select id="selectByOpenId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wxuser
+        where
+        mini_open_id = #{openid}
+        and delete_statu = 1
+    </select>
+    <select id="selectByWxuserIdAndAppmodelId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wxuser
+        where
+        wxuser_id = #{wxuserId}
+        and
+        appmodel_id = #{appmodelId}
+    </select>
+
+    <select id="selectWxuserManager" resultMap="WxuserManagerVOMap">
+        select
+        wxuser_id,wxuser_name,remark,icon,create_time,community_id,user_status
+        from t_wxuser
+        where
+        appmodel_id = #{appmodelId}
+        and delete_statu = 1
+        and icon != ''
+        <if test="nickName != null">
+            and wxuser_name like #{nickName}
+        </if>
+        <if test="community != null">
+            and community_id in(
+            select community_id from t_community
+            where
+            appmodel_id = #{appmodelId}
+            and
+            community_name like #{community}
+            )
+        </if>
+        <if test="startTime != null">
+            and wxuser.create_time > #{startTime}
+        </if>
+        <if test="endTime != null">
+            and <![CDATA[ wxuser.create_time < #{endTime} ]]>
+        </if>
+    </select>
+    <select id="selectByUnionid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wxuser
+        where
+        union_id = #{unionid}
+        and delete_statu = 1
+    </select>
+
+    <select id="selectByGroupleaderId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        t_wxuser
+        where
+        wxuser_id = (
+        select
+        wxuser_id
+        from t_group_leader
+        where
+        group_leader_id =#{groupLeaderId}
+        and delete_state = 0
+        and status in(1,3)
+        )
+    </select>
+    <select id="selectIconByUserId" resultType="java.lang.String">
+        select icon from t_wxuser where wxuser_id = #{wxuserId}
+    </select>
+    <select id="selectNameByUserId" resultType="java.lang.String">
+        select wxuser_name from t_wxuser where wxuser_id = #{wxuserId}
+    </select>
+    <select id="selectOneByPcOpenId" resultMap="BaseResultMap">
+
+    </select>
+
+    <select id="findCustomersByGroupLeaderId" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        t_wxuser as u
+        WHERE
+        u.wxuser_id IN (
+        SELECT
+        DISTINCT (wxuser_id)
+        FROM
+        t_order
+        WHERE
+        group_id = #{groupLeaderId});
+        <if test="search != null and search!=''">
+            AND CONCAT(u.wxuser_name,c.user_name,c.phone) LIKE CONCAT('%',#{search},'%')
+        </if>
+    </select>
+</mapper>

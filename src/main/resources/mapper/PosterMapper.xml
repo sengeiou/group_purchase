@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.shop.dao.PosterMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.shop.model.Poster">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="poster_id" jdbcType="INTEGER" property="posterId"/>
+        <result column="jump_type" jdbcType="INTEGER" property="jumpType"/>
+        <result column="poster_img" jdbcType="VARCHAR" property="posterImg"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="target_url" jdbcType="VARCHAR" property="targetUrl"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="activity_goods_id" jdbcType="BIGINT" property="activityGoodsId"/>
+        <result column="target_name" jdbcType="VARCHAR" property="targetName"/>
+        <result column="category_id" jdbcType="BIGINT" property="categoryId"/>
+        <result column="article_id" jdbcType="VARCHAR" property="articleId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        poster_id, jump_type, poster_img, create_time, appmodel_id, target_url, sort, activity_goods_id,
+        target_name, category_id, article_id
+    </sql>
+
+    <update id="updateSortById">
+        update t_poster set sort = #{sort} where poster_id = #{posterId} and appmodel_id = #{appmodelId}
+    </update>
+
+    <select id="findByAppmodelId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_poster
+        where appmodel_id = #{appmodelId,jdbcType=VARCHAR} order by sort
+    </select>
+
+    <select id="findByAppmodelIdDesc" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_poster
+        where appmodel_id = #{appmodelId,jdbcType=VARCHAR} order by sort desc
+    </select>
+
+    <delete id="batchDelete" parameterType="java.lang.String">
+        delete from t_poster
+        where poster_id in
+        <foreach item="posterId" index="index" collection="array" open="("
+                 separator="," close=")">
+            #{posterId}
+        </foreach>
+    </delete>
+</mapper>

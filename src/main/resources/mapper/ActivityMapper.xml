@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.activity.dao.ActivityMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.activity.model.Activity">
+        <id column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="activity_type" jdbcType="INTEGER" property="activityType"/>
+        <result column="activity_name" jdbcType="VARCHAR" property="activityName"/>
+        <result column="activity_poster" jdbcType="VARCHAR" property="activityPoster"/>
+        <result column="ready_time" jdbcType="VARCHAR" property="readyTime"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="delete_status" jdbcType="TINYINT" property="deleteStatus"/>
+        <result column="forecast_receive_time" jdbcType="TIMESTAMP" property="forecastReceiveTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="act_goods_auto_sort" jdbcType="TINYINT" property="actGoodsAutoSort"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+        activity_id, activity_type, activity_name, activity_poster, ready_time, start_time, end_time, forecast_receive_time,
+        delete_status, status, activity_goods_num, gmv,turnover, participants, appmodel_id,act_goods_auto_sort
+    </sql>
+
+    <resultMap id="ActivityInfoVOMap" type="com.mds.group.purchase.shop.vo.ActivityInfoVO">
+        <id column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="activity_name" jdbcType="VARCHAR" property="activityName"/>
+    </resultMap>
+
+    <insert id="insertAct" useGeneratedKeys="true" keyProperty="activityId">
+        insert into t_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityName != null">
+                activity_name,
+            </if>
+            <if test="activityType != null">
+                activity_type,
+            </if>
+            <if test="activityPoster != null">
+                activity_poster,
+            </if>
+            <if test="readyTime != null">
+                ready_time,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="forecastReceiveTime != null">
+                forecast_receive_time,
+            </if>
+            <if test="appmodelId != null">
+                appmodel_id,
+            </if>
+            <!--   <if test="verifyNum != null">
+                   verify_num,
+               </if>-->
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityName != null">
+                #{activityName,jdbcType=VARCHAR},
+            </if>
+            <if test="activityType != null">
+                #{activityType,jdbcType=INTEGER},
+            </if>
+            <if test="activityPoster != null">
+                #{activityPoster,jdbcType=VARCHAR},
+            </if>
+            <if test="readyTime != null">
+                #{readyTime,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="forecastReceiveTime != null">
+                #{forecastReceiveTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="appmodelId != null">
+                #{appmodelId,jdbcType=VARCHAR},
+            </if>
+            <!--   <if test="verifyNum != null">
+                   #{verifyNum,jdbcType=VARCHAR},
+               </if>-->
+        </trim>
+    </insert>
+
+    <select id="selectAct" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_activity
+        where appmodel_id = #{appmodelId} and delete_status=0 and activity_type=#{actType} and status in
+        <foreach item="item" index="index" collection="status" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        order by start_time desc
+    </select>
+
+    <select id="selectAssignActivitys" resultMap="ActivityInfoVOMap">
+        select activity_id,activity_name  from t_activity
+        where appmodel_id = #{appmodelId} and delete_status=0
+        and status in(0,1,2)
+        and  activity_type = #{searchType}
+        order by start_time
+    </select>
+    <select id="selectAllStartAndReadyAct" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_activity
+        where appmodel_id = #{appmodelId} and delete_status= 0 and status in
+        <foreach item="item" index="index" collection="status" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        order by start_time desc
+    </select>
+    <select id="selectByActId" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumn"/>
+        from t_activity where delete_status = 0 and activity_id = #{actId}
+    </select>
+</mapper>

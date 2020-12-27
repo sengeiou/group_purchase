@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.OrderDetailMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.OrderDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="order_detail_id" jdbcType="BIGINT" property="orderDetailId"/>
+        <result column="order_detail_no" jdbcType="VARCHAR" property="orderDetailNo"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_type" jdbcType="INTEGER" property="orderType"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+        <result column="wxuser_id" jdbcType="BIGINT" property="wxuserId"/>
+        <result column="preferential" jdbcType="DECIMAL" property="preferential"/>
+        <result column="pay_fee" jdbcType="DECIMAL" property="payFee"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+        <result column="record_time" jdbcType="TIMESTAMP" property="recordTime"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="activity_id" jdbcType="BIGINT" property="activityId"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="goods_detail" jdbcType="LONGVARCHAR" property="goodsDetail"/>
+        <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+        <result column="is_solitaire_order" jdbcType="BIT" property="isSolitaireOrder"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        order_detail_id,order_detail_no,order_id,wxuser_id,goods_id,preferential,goods_img,goods_name,update_time,send_time,
+        record_time,line_id,goods_num,group_leader_commission,appmodel_id,activity_id,goods_detail,goods_price,community_id,pay_fee,
+        is_solitaire_order
+        </sql>
+    <update id="updateSendTimeByOrderId">
+        update t_order_detail set send_time = #{date}
+        where order_id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </update>
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+      select * from t_order_detail where order_id = #{orderId}
+    </select>
+
+
+    <select id="selectOrderDetails" resultMap="BaseResultMap">
+        select
+         *
+        from t_order_detail where order_id = #{orderId}
+    </select>
+    <select id="selectCountByActIdUser" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM (SELECT o.`order_id` FROM t_order_detail AS od , t_order AS o
+        WHERE od.`activity_id`= #{activityId} AND od.`order_id`=o.`order_id` GROUP BY o.`wxuser_id`) AS v;
+    </select>
+
+    <select id="selectByActivityIdAndOrderPaySuccess" resultMap="BaseResultMap">
+        select
+          od.*
+        from t_order_detail od
+        left join t_order o on o.pay_status in (1,2,3,4)
+        where
+        o.order_id = od.order_id
+        and od.activity_id = #{activityId}
+    </select>
+    <select id="selectByActivityIdAndOrderNotPay" resultMap="BaseResultMap">
+        select
+          od.*
+        from t_order_detail od
+        left join t_order o on o.pay_status = 0
+        where
+        o.order_id = od.order_id
+        and od.activity_id = #{actId}
+    </select>
+
+    <select id="selectByUserIdAndActGoodsId" resultMap="BaseResultMap">
+         <![CDATA[
+
+
+
+         select
+                 od.*
+                from t_order_detail od
+                left join t_order o on o.order_id = od.order_id
+                where
+                o.pay_status >= 0 and o.pay_status <=4
+                and od.act_goods_id = #{actGoodsId}
+                and od.wxuser_id = #{wxuserId}
+
+
+
+        ]]>
+    </select>
+    <select id="selectByNoSendAndNoPayActivityGoods"
+            resultMap="BaseResultMap">
+  select
+          od.*
+        from t_order_detail od
+        left join t_order o on o.pay_status = #{statu}
+        where
+        o.order_id = od.order_id
+        and od.activity_id = #{activityId}
+    </select>
+    <select id="countCommissionByOrderId" resultType="java.math.BigDecimal">
+        select SUM(group_leader_commission) from t_order_detail
+        where order_id in
+        <foreach collection="orderIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findWait4SignByGroupLeaderId" resultMap="BaseResultMap">
+        SELECT
+         od.*
+        FROM
+            t_order
+            LEFT JOIN t_order_detail as od ON t_order.order_id = od.order_id
+        WHERE
+            t_order.group_id = #{groupLeaderId}
+            AND t_order.pay_status = 2
+            AND t_order.delete_flag =0
+	</select>
+    <select id="countSettlementCommission" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(od.group_leader_commission)
+        FROM
+            t_order
+            LEFT JOIN t_order_detail as od ON t_order.order_id = od.order_id
+        WHERE
+            t_order.group_id = #{groupLeaderId}
+            AND t_order.pay_status not in (0,4,5,6,7,9,10)
+            AND t_order.delete_flag =0
+    </select>
+
+</mapper>

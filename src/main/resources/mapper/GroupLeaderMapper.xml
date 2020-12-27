@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.user.dao.GroupLeaderMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.user.model.GroupLeader">
+        <id column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="brokerage" jdbcType="DECIMAL" property="brokerage"/>
+        <result column="total_brokerage" jdbcType="DECIMAL" property="totalBrokerage"/>
+        <result column="group_phone" jdbcType="VARCHAR" property="groupPhone"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="form_id" jdbcType="VARCHAR" property="formId"/>
+        <result column="group_location" jdbcType="VARCHAR" property="groupLocation"/>
+        <result column="apply_community_name" jdbcType="VARCHAR" property="applyCommunityName"/>
+        <result column="delete_state" jdbcType="BIT" property="deleteState"/>
+    </resultMap>
+    <resultMap id="GroupManagerVOMap" type="com.mds.group.purchase.user.vo.GroupManagerVO" extends="BaseResultMap"
+               autoMapping="true">
+        <result property="headImage" jdbcType="VARCHAR" column="icon"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      group_leader_id,wxuser_id,group_name,brokerage,total_brokerage,group_phone,create_time,
+      address,status,appmodel_id,delete_state,community_id,line_id,form_id
+    </sql>
+    <update id="updateDelete">
+        update t_group_leader set delete_state = 1 where group_leader_id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="searchWxuserManager" resultMap="GroupManagerVOMap">
+        select
+        leader.group_leader_id,leader.wxuser_id,leader.group_name,leader.group_phone,leader.create_time,leader.brokerage,
+        leader.address,leader.status,leader.community_id,leader.line_id,leader.group_location,leader.apply_community_name,
+        wxuser.icon
+        from t_group_leader as leader
+        left join t_wxuser as wxuser on wxuser.wxuser_id = leader.wxuser_id
+        where
+        leader.appmodel_id = #{appmodelId}
+        and leader.delete_state = 0
+        and leader.status = #{searchType}
+        <if test="lineName != null">
+            and leader.community_id in (
+            select
+            ld.community_id
+            from t_line_detail ld
+            left join t_line l on l.line_id = ld.line_id
+            where
+            l.appmodel_id = #{appmodelId} and ld.del_flag = 0
+            and l.line_name like #{lineName}
+            )
+        </if>
+        <if test="groupLeaderId != null">
+            and leader.group_leader_id = #{groupLeaderId}
+        </if>
+        <if test="communityName != null">
+            and leader.community_id in(
+            select community_id from t_community
+            where
+            community_name like #{communityName}
+            and del_flag = 0
+            )
+        </if>
+        <if test="area != null">
+            and leader.community_id in(
+            select community_id from t_community
+            where
+            pca_adr like #{area}
+            and del_flag = 0
+            )
+        </if>
+        <if test="provinceId != null">
+            and leader.community_id in(
+            select community_id from t_community
+            where pca_adr like #{area}
+            and del_flag = 0
+            )
+        </if>
+    </select>
+    <select id="selectByAppmodelId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_leader
+        where
+        appmodel_id = #{appmodelId}
+        and delete_state = 0
+        and status in(1,3)
+    </select>
+    <select id="selectByStatusAppmodelId" resultMap="BaseResultMap">
+        select * from t_group_leader
+        where appmodel_id = #{appmodelId}
+        and delete_state = 0
+        and status=#{status}
+    </select>
+    <select id="selectByCommunityId" resultMap="BaseResultMap">
+        select * from t_group_leader where community_id = #{groupLeader.communityId} and status = 1 and delete_state = 0 limit 1
+    </select>
+    <select id="selectByWxUserId" resultMap="BaseResultMap">
+        select  * from t_group_leader where wxuser_id = #{wxuserId} and delete_state = 0
+    </select>
+    <select id="selectApply" resultMap="GroupManagerVOMap">
+        select leader.group_leader_id,leader.wxuser_id,leader.group_name,leader.group_phone,leader.create_time,
+        leader.address,leader.status,leader.community_id,leader.line_id,leader.group_location,leader.apply_community_name,
+        wxuser.icon
+         from t_group_leader as leader
+        join t_wxuser as wxuser on wxuser.wxuser_id = leader.wxuser_id
+          where leader.appmodel_id = #{appmodelId} and leader.delete_state = 0 and leader.status = 0
+    </select>
+    <select id="selectByPhone" resultMap="BaseResultMap">
+        select * from t_group_leader where group_phone = #{groupPhone} and appmodel_id = #{appmodelId} and delete_state = 0 limit 1
+    </select>
+
+</mapper>

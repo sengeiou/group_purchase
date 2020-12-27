@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.AfterSaleOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.AfterSaleOrder">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="after_sale_no" jdbcType="VARCHAR" property="afterSaleNo"/>
+        <result column="after_sale_type" jdbcType="INTEGER" property="afterSaleType"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="after_sale_status" jdbcType="INTEGER" property="afterSaleStatus"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="original_order_id" jdbcType="VARCHAR" property="originalOrderId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="application_num" jdbcType="INTEGER" property="applicationNum"/>
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="images" jdbcType="VARCHAR" property="images"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="refusal_time" jdbcType="TIMESTAMP" property="refusalTime"/>
+        <result column="success_time" jdbcType="TIMESTAMP" property="successTime"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="act_goods_price" jdbcType="DECIMAL" property="actGoodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_image" jdbcType="VARCHAR" property="goodsImage"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+
+
+    <resultMap id="AfterSaleOrderResultMap" type="com.mds.group.purchase.order.result.AfterSaleOrderResult">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="after_sale_no" jdbcType="VARCHAR" property="afterSaleNo"/>
+        <result column="after_sale_type" jdbcType="INTEGER" property="afterSaleType"/>
+        <result column="after_sale_status" jdbcType="INTEGER" property="afterSaleStatus"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="original_order_id" jdbcType="VARCHAR" property="originalOrderId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="application_num" jdbcType="INTEGER" property="applicationNum"/>
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="images" jdbcType="VARCHAR" property="images"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="refusal_time" jdbcType="TIMESTAMP" property="refusalTime"/>
+        <result column="success_time" jdbcType="TIMESTAMP" property="successTime"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="act_goods_price" jdbcType="DECIMAL" property="actGoodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_image" jdbcType="VARCHAR" property="goodsImage"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone"/>
+        <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="icon" jdbcType="VARCHAR" property="wxuserIcon"/>
+        <result column="wxuser_name" jdbcType="VARCHAR" property="wxuserName"/>
+    </resultMap>
+
+    <resultMap id="AfterSaleOrderManageResultMap" type="com.mds.group.purchase.order.result.AfterSaleOrderManageResult">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="after_sale_order_id" jdbcType="BIGINT" property="afterSaleOrderId"/>
+        <result column="after_sale_no" jdbcType="VARCHAR" property="afterSaleNo"/>
+        <result column="after_sale_type" jdbcType="INTEGER" property="afterSaleType"/>
+        <result column="after_sale_status" jdbcType="INTEGER" property="afterSaleStatus"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
+        <result column="wxuser_id" jdbcType="VARCHAR" property="wxuserId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="original_order_id" jdbcType="VARCHAR" property="originalOrderId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="application_num" jdbcType="INTEGER" property="applicationNum"/>
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="images" jdbcType="VARCHAR" property="images"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="refusal_time" jdbcType="TIMESTAMP" property="refusalTime"/>
+        <result column="success_time" jdbcType="TIMESTAMP" property="successTime"/>
+        <result column="act_goods_id" jdbcType="BIGINT" property="actGoodsId"/>
+        <result column="act_goods_price" jdbcType="DECIMAL" property="actGoodsPrice"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_image" jdbcType="VARCHAR" property="goodsImage"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        after_sale_order_id,after_sale_type,after_sale_status,wxuser_id,group_id,order_id,original_order_id,goods_id,application_num,refund_fee,deadline,description,images,create_time,close_time,refusal_time,success_time,act_goods_id,act_goods_price,goods_name,goods_image,appmodel_id
+    </sql>
+    <update id="updateSatausByOrderIds">
+        UPDATE
+        t_after_sale_order
+        SET
+        after_sale_status = #{status}
+        WHERE
+        order_id IN (
+        SELECT
+        order_id
+        FROM
+        t_order
+        WHERE
+        order_type = 11
+        AND order_id IN
+        <foreach collection="orderIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+        )
+    </update>
+    <select id="countNotEndByUserId" resultType="integer">
+        SELECT
+        count( after_sale_order_id )
+        FROM
+        t_after_sale_order
+        WHERE
+        after_sale_type NOT IN ( 1, 2 )
+        AND after_sale_status NOT IN ( 2, 7, 99 ) AND wxuser_id IN
+        <foreach collection="userIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findByGroupId" resultMap="AfterSaleOrderResultMap">
+        SELECT
+        aso.*,
+        u.wxuser_name,
+        u.icon,
+        o.buyer_name,
+        o.buyer_phone,
+        o.buyer_address
+        FROM
+        t_after_sale_order AS aso
+        LEFT JOIN t_wxuser AS u ON aso.wxuser_id = u.wxuser_id
+        LEFT JOIN t_order AS o ON o.order_id = aso.original_order_id
+        WHERE
+        aso.after_sale_type NOT IN ( 1, 2 )
+        AND aso.group_id = #{groupId}
+        <if test="search != null ">
+            AND aso.goods_name LIKE concat('%',#{search},'%')
+        </if>
+        order by create_time desc
+
+    </select>
+    <select id="findByOriginalOrderIds" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where original_order_id in
+        <foreach collection="orderIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+        order by order_id,create_time
+    </select>
+    <select id="findByAppModelId" resultMap="BaseResultMap">
+    select
+    *
+    from t_after_sale_order
+    where appmodel_id =#{appmodelId}
+    </select>
+    <select id="selectUserAfterSaleOrderList" resultMap="AfterSaleOrderResultMap">
+        select
+        aso.*,
+        u.wxuser_name,
+        u.icon,
+        o.buyer_name,
+        o.buyer_phone,
+        o.buyer_address
+        from t_after_sale_order as aso
+        LEFT JOIN t_wxuser AS u ON aso.wxuser_id = u.wxuser_id
+        left join t_order as o on aso.order_id=o.order_id
+        left join t_order_detail AS od ON od.`order_id`=o.`order_id`
+        where aso.after_sale_type NOT IN ( 1, 2 )
+        <if test="wxuserId != null">
+            and aso.wxuser_id =#{wxuserId}
+        </if>
+        <trim>
+            <if test="lineId != null">
+                and od.`line_id`=#{lineId}
+            </if>
+            <if test="streetId != null">
+                and od.street_id=#{streetId}
+            </if>
+            <if test="activityId != null">
+                and od.`activity_id`=#{activityId}
+            </if>
+            <if test="startTime!=null and endTime!=null">
+                <![CDATA[ and aso.create_time > #{startTime} and aso.create_time <= #{endTime} ]]>
+            </if>
+        </trim>
+        order by aso.create_time desc
+    </select>
+    <select id="findByNewOrderIds" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where order_id in
+        <foreach collection="orderIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="searchAfterSaleOrder" resultMap="AfterSaleOrderManageResultMap">
+        SELECT
+        aso.*
+        FROM
+        t_after_sale_order AS aso
+        LEFT JOIN t_order AS o ON o.order_id = aso.original_order_id
+        left join t_order_detail as od on o.order_id = od.order_id
+        left join t_line as l on l.line_id = od.line_id
+        left join t_comment as c on c.order_no = o.order_no
+        left join t_wxuser as w on w.wxuser_id =o.wxuser_id
+        left join t_order_send_bill_mapping as om on om.order_id = o.order_id
+        left join t_send_bill as sb on sb.send_bill_id = om.send_bill_id
+        where o.delete_flag = 0 and o.appmodel_id = #{appmodelId}
+        and aso.appmodel_id = #{appmodelId}
+        <if test="searchOrderVo.goodsName != null ">
+            and od.goods_name like concat('%',#{searchOrderVo.goodsName},'%')
+        </if>
+        <if test="searchOrderVo.wxuserName != null">
+            and w.wxuser_name like concat('%',#{searchOrderVo.wxuserName},'%')
+        </if>
+        <if test="searchOrderVo.buyerName != null">
+            and o.buyer_name like concat('%',#{searchOrderVo.buyerName},'%')
+        </if>
+        <if test="searchOrderVo.orderNo != null">
+            and aso.after_sale_no = #{searchOrderVo.orderNo}
+        </if>
+        <if test="searchOrderVo.pickupLocation != null">
+            and o.pickup_location like concat('%',#{searchOrderVo.pickupLocation},'%')
+        </if>
+        <if test="searchOrderVo.groupName != null">
+            and o.group_leader_name like concat('%',#{searchOrderVo.groupName},'%')
+        </if>
+        <if test="searchOrderVo.lineId!= 0">
+            and od.line_id = #{searchOrderVo.lineId}
+        </if>
+        <if test="searchOrderVo.orderStatus != null and searchOrderVo.orderStatus != -1">
+            <if test="searchOrderVo.orderStatus ==3">
+                and o.pay_status in (3,4)
+            </if>
+
+            <if test="searchOrderVo.orderStatus ==5">
+                and o.pay_status in (5,6,7,9,10)
+            </if>
+            <if test="searchOrderVo.orderStatus !=3 and searchOrderVo.orderStatus !=5 and searchOrderVo.orderStatus !=99">
+                and o.pay_status = #{searchOrderVo.orderStatus}
+            </if>
+
+        </if>
+        <if test="startDate!=null and  endDate != null">
+            <![CDATA[ and o.create_time > #{startDate} and o.create_time <= #{endDate} ]]>
+        </if>
+        <if test="searchOrderVo.sendBillId != 0">
+            <if test="searchOrderVo.sendBillId == -1">
+                and om.generate = 0 and om.del_flag = 0
+            </if>
+            <if test="searchOrderVo.sendBillId != -1">
+                and om.send_bill_id = #{searchOrderVo.sendBillId} and om.del_flag = 0 and om.generate = 1
+            </if>
+        </if>
+        order by aso.create_time desc
+
+    </select>
+    <select id="findListByIds" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where after_sale_order_id in
+        <foreach collection="afterSaleOrderIds" item="item" separator="," close=")" open="(" index="i">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findByNewOrderId" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where order_id =#{orderId}
+        order by order_id,create_time
+    </select>
+    <select id="selectUserApplyOrderByOriginalOrderId" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where after_sale_type in(3,4,5)
+        and original_order_id = #{orderId}
+        order by  after_sale_order_id desc
+        limit 1
+
+    </select>
+    <select id="selectLeaderApplyOrderByOriginalOrderId" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where after_sale_type in(1,2)
+        and original_order_id like concat('%',#{orderId},'%')
+        order by  after_sale_order_id desc
+        limit 1
+    </select>
+    <select id="selectOrderByOriginalOrderId" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where
+         original_order_id like concat('%',#{orderId},'%')
+        order by  after_sale_order_id desc
+        limit 1
+    </select>
+
+    <select id="findNotEndByOriginalOrderIdsAndIdNotIn" resultMap="BaseResultMap">
+        select
+        *
+        from t_after_sale_order
+        where after_sale_order_id !=#{afterSaleOrderId}
+        and after_sale_type in (1,4)
+        and after_sale_status NOT IN ( 2, 7, 99 )
+        AND original_order_id IN (#{originalOrderIds})
+    </select>
+    <select id="selectUserApplyOrderByExchangeOrderId" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            t_after_sale_order
+        WHERE
+            after_sale_type IN ( 3, 4, 5 )
+            AND original_order_id IN ( SELECT original_order_id FROM t_after_sale_order WHERE order_id = #{orderId} )
+        ORDER BY
+            after_sale_order_id DESC
+            LIMIT 1
+
+    </select>
+    <select id="selectLeaderApplyOrderByExchangeOrderId" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            t_after_sale_order
+        WHERE
+            after_sale_type IN ( 1, 2 )
+            AND original_order_id LIKE concat( '%', ( SELECT original_order_id FROM t_after_sale_order WHERE order_id = #{orderId} ), '%' )
+        ORDER BY
+            after_sale_order_id DESC
+            LIMIT 1
+
+    </select>
+
+</mapper>

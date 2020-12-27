@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.order.dao.SendBillMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.order.model.SendBill">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+        <result column="create_date" jdbcType="VARCHAR" property="createDate"/>
+        <result column="orders" jdbcType="INTEGER" property="orders"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="commission" jdbcType="DECIMAL" property="commission"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+    </resultMap>
+    <resultMap id="SendBillResultMap" type="com.mds.group.purchase.order.result.SendBillResult">
+        <id column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+        <result column="create_date" jdbcType="VARCHAR" property="createDate"/>
+        <result column="orders" jdbcType="INTEGER" property="orders"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="commission" jdbcType="DECIMAL" property="commission"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <resultMap id="SendbillFindVOMap" type="com.mds.group.purchase.order.vo.SendbillFindVO">
+        <result column="send_bill_id" jdbcType="BIGINT" property="sendBillId"/>
+        <result column="send_bill_name" jdbcType="VARCHAR" property="sendBillName"/>
+    </resultMap>
+    <update id="updateInfo">
+        update t_send_bill set orders = orders - #{orders} ,amount = amount -#{amount},commission = commission-#{commission}
+        where send_bill_id = #{sendBillId}
+    </update>
+    <update id="updateStatus">
+        update t_send_bill set status =#{status} where send_bill_id = #{sendBillId}
+    </update>
+    <update id="deleteById">
+        update t_send_bill set del_flag =1 where del_flag = 0 and send_bill_id = #{sendBillId}
+    </update>
+    <select id="selectByFilterVoSelective" resultMap="SendBillResultMap">
+        select * from t_send_bill where
+        appmodel_id = #{appmodelId} and del_flag = 0
+        <if test="status != 0">
+            and status = #{status}
+        </if>
+        order by create_date desc
+    </select>
+    <select id="selectByDate" resultMap="BaseResultMap">
+        select * from t_send_bill where
+        appmodel_id = #{appmodelId} and del_flag = 0
+    </select>
+
+
+    <select id="select3SendBill" resultMap="BaseResultMap">
+        select * from t_send_bill where appmodel_id = #{appmodelId} and del_flag = 0 and status in (1,2,3)
+        order by create_date desc
+    </select>
+
+
+    <select id="selectBySendbillFind" resultMap="SendbillFindVOMap">
+          select * from t_send_bill
+           where appmodel_id = #{appmodelId}
+           and del_flag = 0
+           and status in(1,2,3)
+          order by create_date desc
+    </select>
+    <!--<select id="selectByStatus" resultMap="BaseResultMap">-->
+    <!--select * from t_send_bill where-->
+    <!--appmodel_id = #{appmodelId} and del_falg = 0-->
+    <!--</select>-->
+</mapper>

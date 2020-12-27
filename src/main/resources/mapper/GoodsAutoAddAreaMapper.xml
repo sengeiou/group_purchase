@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.goods.dao.GoodsAutoAddAreaMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.goods.model.GoodsAutoAddArea">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="auto_add" jdbcType="INTEGER" property="autoAdd"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+    </resultMap>
+    <update id="updateBatch">
+        update t_goods_auto_add_area set auto_add = #{autoAdd} where goods_id in
+        <foreach collection="idList" index="i" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateByGoodsId">
+        update t_goods_auto_add_area set auto_add = #{autoAdd} where goods_id = #{goodsId}
+    </update>
+    <delete id="deleteByGoodsId">
+        delete from t_goods_auto_add_area where goods_id in
+        <foreach collection="goodsIds" open="(" close=")" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="selectByAppmodelId" resultMap="BaseResultMap">
+        select * from t_goods_auto_add_area where appmodel_id = #{appmodelId} and auto_add = true
+    </select>
+</mapper>

@@ -1,0 +1,64 @@
+version: '2'
+services:
+  #mysql
+  mysql:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d/
+      - ./mysql/sql:/opt/sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    networks: #加入指定网络
+      - group_mall
+  #redis
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    command: redis-server --requirepass 123456
+    ports:
+      - "6379:6379"
+    networks: #加入指定网络
+      - group_mall
+  #activemq
+  activemq:
+    image: rmohr/activemq
+    restart: always
+    container_name: activemq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    networks: #加入指定网络
+      - group_mall
+  #mongo
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks: #加入指定网络
+      - group_mall
+  #xxl-job
+  xxl-job:
+    image: xuxueli/xxl-job-admin:2.1.2
+    restart: always
+    container_name: xxl-job
+    ports:
+      - "8081:8080"
+      # link 到mysql 需要使用内部端口
+    environment:
+      PARAMS: '--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?Unicode=true&characterEncoding=UTF-8 --spring
+       .datasource.username=root  --spring.datasource.password=123456'
+    networks: #加入指定网络
+      - group_mall
+    depends_on:
+      - mysql
+networks:
+  group_mall:
+    driver: bridge

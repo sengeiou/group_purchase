@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.LineDetailMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.LineDetail">
+        <id column="line_detail_id" jdbcType="BIGINT" property="lineDetailId"/>
+        <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="community_name" jdbcType="VARCHAR" property="communityName"/>
+        <result column="street_id" jdbcType="BIGINT" property="streetId"/>
+        <result column="street_name" jdbcType="VARCHAR" property="streetName"/>
+        <result column="street_name" jdbcType="VARCHAR" property="streetName"/>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+    </resultMap>
+    <resultMap id="LineDetailResultMap" type="com.mds.group.purchase.logistics.result.LineDetailResult">
+        <result column="street_id" jdbcType="BIGINT" property="streetId"/>
+        <result column="street_name" jdbcType="VARCHAR" property="streetName"/>
+        <result column="line_id" jdbcType="VARCHAR" property="lineId"/>
+        <collection property="lineDetails" column="street_id"
+                    select="com.mds.group.purchase.logistics.dao.LineDetailMapper.selectDetailByStreetId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        line_detail_id,line_id,community_id,community_name,street_name,appmodel_id,street_id,del_flag
+    </sql>
+    <update id="updateStreetNameByStreetId">
+        update t_line_detail set street_name = #{street} where street_id = #{streetid}
+    </update>
+    <delete id="deleteLineDetail">
+      delete from t_line_detail where line_detail_id =#{lineDetailId}
+    </delete>
+    <delete id="deleteByLineId">
+      delete from  t_line_detail where line_id = #{lineId}
+    </delete>
+    <delete id="deleteByLineIds">
+        delete from t_line_detail where line_id in
+        <foreach collection="list" separator="," open="(" item="id" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByLDIds">
+        delete from t_line_detail where line_detail_id in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteByCommunityIds">
+        delete from t_line_detail where community_id in
+        <foreach collection="communities" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="selectByLineId" resultMap="LineDetailResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where line_id =#{lindId}
+    </select>
+    <select id="selectStreetNameByLineId" resultType="string">
+      select
+        street_name
+      from t_line_detail where line_id =#{lindId}
+    </select>
+    <select id="selectDetailByStreetId" resultMap="BaseResultMap">
+      select *
+      from t_line_detail
+      where street_id = #{streetId}
+      and del_flag= 0
+    </select>
+    <select id="selectByUserId" resultMap="BaseResultMap">
+      select street_id,line_id
+      from t_line_detail as tld
+      join t_wxuser as tu on tld.community_id = tu.community_id
+      where tu.wxuser_id = #{wxuserId} and del_flag = 0 and tld.line_id is not null
+      limit 1
+    </select>
+    <select id="selectByLineIds" resultMap="LineDetailResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where line_id in (#{lineIds})
+    </select>
+    <select id="selectByCommunityIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where del_flag = 0 and line_id > 0 and community_id in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByLineIdList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where del_flag = 0 and line_id in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByAppmodelId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where del_flag = 0 and appmodel_id = #{appmodelId} and line_id > 0
+    </select>
+
+    <select id="selectByCommunityId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_line_detail where del_flag = 0 and line_id > 0 and community_id = #{communityId}
+    </select>
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.goods.dao.GoodsDetailMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.goods.model.GoodsDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="goods_detail_id" jdbcType="BIGINT" property="goodsDetailId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="provider_id" jdbcType="VARCHAR" property="providerId"/>
+        <result column="provider_name" jdbcType="VARCHAR" property="providerName"/>
+        <result column="sales_volume" jdbcType="INTEGER" property="salesVolume"/>
+        <result column="sham_volume" jdbcType="INTEGER" property="shamVolume"/>
+        <result column="stock" jdbcType="INTEGER" property="stock"/>
+        <result column="goods_desc" jdbcType="VARCHAR" property="goodsDesc"/>
+        <result column="goods_property" jdbcType="VARCHAR" property="goodsProperty"/>
+        <result column="expiration_date" jdbcType="VARCHAR" property="expirationDate"/>
+        <result column="group_leader_commission" jdbcType="DECIMAL" property="groupLeaderCommission"/>
+        <result column="commission_type" jdbcType="INTEGER" property="commissionType"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+        <result column="text" jdbcType="LONGVARCHAR" property="text"/>
+        <association column="provider_id" javaType="STRING" property="providerName"
+                     select="com.mds.group.purchase.user.dao.ProviderMapper.getName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    goods_detail_id,goods_id,provider_id,sales_volume,sham_volume,stock,goods_desc,goods_property,expiration_date,group_leader_commission,
+    commission_type,appmodel_id,text,provider_name
+  </sql>
+    <insert id="insertGoodsDetail" keyProperty="goodsDetailId"
+            parameterType="com.mds.group.purchase.goods.model.GoodsDetail" useGeneratedKeys="true">
+        insert into t_goods_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsDetailId != null">
+                goods_detail_id,
+            </if>
+            <if test="goodsId != null">
+                goods_id,
+            </if>
+            <if test="providerId != null">
+                provider_id,
+            </if>
+            <if test="salesVolume != null">
+                sales_volume,
+            </if>
+            <if test="shamVolume != null">
+                sham_volume,
+            </if>
+            <if test="stock != null">
+                stock,
+            </if>
+            <if test="goodsDesc != null">
+                `goods_desc`,
+            </if>
+            <if test="expirationDate != null">
+                expiration_date,
+            </if>
+            <if test="groupLeaderCommission != null">
+                group_leader_commission,
+            </if>
+            <if test="commissionType != null">
+                commission_type,
+            </if>
+            <if test="appmodelId != null">
+                appmodel_id,
+            </if>
+            <if test="text != null">
+                text,
+            </if>
+            <if test="goodsProperty !=null">
+                goods_property,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="goodsDetailId != null">
+                #{goodsDetailId,jdbcType=BIGINT},
+            </if>
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=BIGINT},
+            </if>
+            <if test="providerId != null">
+                #{providerId,jdbcType=BIGINT},
+            </if>
+            <if test="salesVolume != null">
+                #{salesVolume,jdbcType=INTEGER},
+            </if>
+            <if test="shamVolume != null">
+                #{shamVolume,jdbcType=INTEGER},
+            </if>
+            <if test="stock != null">
+                #{stock,jdbcType=INTEGER},
+            </if>
+            <if test="goodsDesc != null">
+                #{goodsDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="expirationDate != null">
+                #{expirationDate,jdbcType=VARCHAR},
+            </if>
+            <if test="groupLeaderCommission != null">
+                #{groupLeaderCommission,jdbcType=DECIMAL},
+            </if>
+            <if test="commissionType != null">
+                #{commissionType,jdbcType=INTEGER},
+            </if>
+            <if test="appmodelId != null">
+                #{appmodelId,jdbcType=VARCHAR},
+            </if>
+            <if test="text != null">
+                #{text,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="goodsProperty !=null">
+                #{goodsProperty,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        update t_goods_detail
+        <set>
+            <trim suffixOverrides=",">
+                <if test="goodsId != null">
+                    goods_id =#{goodsId},
+                </if>
+                <if test="providerId != null">
+                    provider_id=#{providerId},
+                </if>
+                <if test="salesVolume != null">
+                    sales_volume =#{salesVolume},
+                </if>
+                <if test="shamVolume != null">
+                    sham_volume =#{shamVolume},
+                </if>
+                <if test="stock != null">
+                    stock =#{stock},
+                </if>
+                <if test="goodsDesc != null">
+                    `goods_desc` =#{goodsDesc},
+                </if>
+                <if test="expirationDate != null">
+                    expiration_date =#{expirationDate},
+                </if>
+                <if test="groupLeaderCommission != null">
+                    group_leader_commission =#{groupLeaderCommission},
+                </if>
+                <if test="commissionType != null">
+                    commission_type =#{commissionType},
+                </if>
+                <if test="text != null">
+                    text =#{text},
+                </if>
+                <if test="goodsProperty!=null">
+                    goods_property = #{goodsProperty}
+                </if>
+            </trim>
+        </set>
+        where appmodel_id = #{appmodelId} and goods_detail_id = #{goodsDetailId}
+    </update>
+
+    <select id="selectByGoodsId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_goods_detail where goods_id = #{goodsId}
+    </select>
+</mapper>

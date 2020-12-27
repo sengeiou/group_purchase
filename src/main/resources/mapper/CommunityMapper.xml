@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.CommunityMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.Community">
+        <id column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="community_name" jdbcType="VARCHAR" property="communityName"/>
+        <result column="street_id" jdbcType="VARCHAR" property="streetId"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="city_id" jdbcType="VARCHAR" property="cityId"/>
+        <result column="province_id" jdbcType="VARCHAR" property="provinceId"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="pca_adr" jdbcType="VARCHAR" property="pcaAdr"/>
+        <result column="street_name" jdbcType="VARCHAR" property="streetName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+
+    <resultMap id="CommunityMoreMap" type="com.mds.group.purchase.logistics.dto.CommunityMoreDTO"
+               extends="BaseResultMap">
+    </resultMap>
+
+    <sql id="Base_Column_List">
+          community_id,community_name,street_id,area_id,city_id,street_name,pca_adr,province_id,location,appmodel_id
+     </sql>
+    <update id="updateStreetNameByStreetId">
+        update t_community set street_name = #{street} where street_id = #{streetid}
+    </update>
+    <delete id="deleteCommunityByStreetId">
+        update t_community set del_flag = 1 where street_id=#{streetId}
+    </delete>
+    <delete id="delByIds">
+        update t_community set del_flag = 1 where community_id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <select id="fuzzySelect" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where appmodel_id =#{appmodelId} and del_flag = 0
+        <trim>
+            <if test="communityId !=null">
+                and community_id = #{communityId}
+            </if>
+            <if test="communityName!=null">
+                and community_name like concat('%',#{communityName},'%')
+            </if>
+            <if test="pcaAdr != null">
+                and pca_adr like concat('%',#{pcaAdr},'%')
+            </if>
+            <if test="streetName!=null">
+                and street_name like concat('%',#{streetName},'%')
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectCommunitysByStreetId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where street_id = #{streetId} and appmodel_id = #{appmodelId} and del_flag=0
+    </select>
+
+    <select id="selectByAppmodelId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where appmodel_id=#{appmodelId} and del_flag=0
+    </select>
+
+    <select id="selectCommunitysByAreaId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where area_id = #{areaId} and appmodel_id=#{appmodelId} and del_flag=0
+    </select>
+
+
+    <select id="selectByCommunityAll" resultMap="CommunityMoreMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community
+        where community_id IN
+        <foreach collection="communityIds" separator="," open="(" item="id" close=")">
+            #{id}
+        </foreach>
+        and del_flag=0
+    </select>
+
+    <select id="selectByGroupleaderId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community
+        where community_id = (
+        select community_id from t_group_leader
+        where group_leader_id = #{groupId}
+        )
+        and del_flag=0
+    </select>
+    <select id="selectCommunitysByCityId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where city_id = #{cityId} and del_flag=0
+    </select>
+    <select id="searchCommunitysByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where appmodel_id =#{appmodelId} and del_flag=0 and community_name
+        like concat('%',#{communityName},'%')
+
+    </select>
+    <select id="selectCommunitysByStreetIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_community where del_flag=0 and street_id in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByNotGroupCommunity" resultMap="BaseResultMap">
+        SELECT
+        DISTINCT	community_id,
+            community_name,
+            street_id,
+            area_id,
+            city_id,
+            street_name,
+            pca_adr,
+            province_id,
+            location,
+            appmodel_id
+        FROM
+            t_community
+        WHERE
+            del_flag = 0
+        and
+            appmodel_id = #{appmodelId}
+        AND community_id not in (
+            SELECT
+                community_id
+            FROM
+                t_line_detail
+            WHERE
+            del_flag = 0
+            AND appmodel_id = #{appmodelId}
+        )
+    </select>
+    <select id="selectByIdList" resultMap="BaseResultMap">
+        select * from t_community where community_id in
+        <foreach collection="ids" index="i" item="it" separator="," close=")" open="(">
+            #{it}
+        </foreach>
+    </select>
+
+
+</mapper>

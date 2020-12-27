@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Ningbo Qishan Technology Co., Ltd
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mds.group.purchase.logistics.dao.GoodsAreaMappingMapper">
+    <resultMap id="BaseResultMap" type="com.mds.group.purchase.logistics.model.GoodsAreaMapping">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="goods_area_id" jdbcType="BIGINT" property="goodsAreaId"/>
+        <result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+        <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="goods_img" jdbcType="VARCHAR" property="goodsImg"/>
+        <result column="community_id" jdbcType="BIGINT" property="communityId"/>
+        <result column="goods_area_name" jdbcType="VARCHAR" property="goodsAreaName"/>
+        <result column="appmodel_id" jdbcType="VARCHAR" property="appmodelId"/>
+    </resultMap>
+    <delete id="deleteByGoodsIds">
+        delete from t_goods_area_mapping
+        where goods_id in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteByCommunityIds">
+        delete from t_goods_area_mapping
+        where community_id in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="selectByFuzzy" resultMap="BaseResultMap">
+        SELECT
+        goodsAre.goods_area_id,
+        goodsAre.goods_id,
+        goods.goods_name,
+        goodsAre.goods_img,
+        goodsAre.community_id,
+        goodsAre.goods_area_name,
+        goodsAre.appmodel_id
+        FROM
+        t_goods_area_mapping AS goodsAre
+        LEFT JOIN t_goods AS goods ON goods.goods_id = goodsAre.goods_id
+        where goodsAre.appmodel_id=#{goodsAreaMapping.appmodelId}
+        <if test="goodsAreaMapping.goodsName!=null">
+            and goodsAre.goods_name like concat('%',#{goodsAreaMapping.goodsName},'%')
+        </if>
+        <if test="goodsAreaMapping.goodsAreaName!=null">
+            and goodsAre.goods_area_name like concat('%',#{goodsAreaMapping.goodsAreaName},'%')
+        </if>
+    </select>
+    <select id="selectByGoodsIds" resultMap="BaseResultMap">
+        select * from t_goods_area_mapping
+        where goods_id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByGoodsId" resultMap="BaseResultMap">
+         select * from t_goods_area_mapping
+        where goods_id =#{goodsId}
+    </select>
+
+
+</mapper>
